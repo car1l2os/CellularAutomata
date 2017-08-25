@@ -7,7 +7,6 @@ and may not be redistributed without written permission.*/
 #include <stdio.h>
 #include <string>
 #include <cmath>
-#include "Grid.cpp"
 
 //Temporal 
 #include "Cell.cpp"
