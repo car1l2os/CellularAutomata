@@ -1,10 +1,12 @@
-//#include "Cell.cpp"
+#include "Grid.h"
 
 /*Esta clase se va a encargar de comprobar
 vecinos y otros metodos dentro de la matriz
 que quedaran enmascarados */
 
-class Grid {
-	//Constructor
-	Grid();
-};
+
+Grid::Grid(int definition)
+{
+	this->definition = definition;
+	
+}
