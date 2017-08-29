@@ -8,5 +8,4 @@ que quedaran enmascarados */
 Grid::Grid(int definition)
 {
 	this->definition = definition;
-	
 }

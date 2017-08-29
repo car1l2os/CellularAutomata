@@ -1,6 +1,3 @@
-/*This source code copyrighted by Lazy Foo' Productions (2004-2015)
-and may not be redistributed without written permission.*/
-
 //Using SDL, SDL_image, standard IO, math, and strings
 #include <SDL.h>
 #include <SDL_image.h>
@@ -137,15 +134,20 @@ SDL_Texture* loadTexture(std::string path)
 
 void DrawCell(Cell* cell)
 {
-	//Render red filled quad
+	//Render filled quad
 	SDL_Rect fillRect = { cell->x, cell->y, cell->width, cell->height };
 	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 	SDL_RenderFillRect(gRenderer, &fillRect);
 
-	//Render blue outlined quad
+	/*//Render outlined quad
 	SDL_Rect outlineRect = { cell->x, cell->y, cell->width, cell->height };
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-	SDL_RenderDrawRect(gRenderer, &outlineRect);
+	SDL_RenderDrawRect(gRenderer, &outlineRect);*/
+}
+
+void DrawGrill(Grid* grid)
+{
+
 }
 
 int main(int argc, char* args[])
@@ -188,7 +190,16 @@ int main(int argc, char* args[])
 				SDL_RenderClear(gRenderer);
 
 				Cell* newCell = new Cell(0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1.0f);
-				DrawCell(newCell);
+				Cell* newCell2 = new Cell(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1.0f);
+
+				Grid* grid = new Grid(3);
+				grid->matrix.push_back(newCell);
+				grid->matrix.push_back(newCell2);
+
+
+				
+				DrawCell(grid->matrix.at(0));
+				DrawCell(grid->matrix.at(1));
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);

@@ -3,7 +3,7 @@
 class Cell {
 private:
 	//Variables
-	bool status; //No seguro sobre esto - Not sure about this
+	bool status; //No seguro sobre esto
 	float value;
 	int onColor, offColor;
 
