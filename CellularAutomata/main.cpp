@@ -11,6 +11,14 @@
 const int SCREEN_WIDTH = 640;
 const int SCREEN_HEIGHT = 480;
 
+//Colores pantalla
+int onColor = 0x00;
+int offColor = 0xFF;
+
+//Tamaño celda
+int cellWidth = SCREEN_WIDTH / 2;
+int cellHeight = SCREEN_HEIGHT / 2;
+
 //Starts up SDL and creates window
 bool init();
 
@@ -135,7 +143,7 @@ SDL_Texture* loadTexture(std::string path)
 void DrawCell(Cell* cell)
 {
 	//Render filled quad
-	SDL_Rect fillRect = { cell->x, cell->y, cell->width, cell->height };
+	SDL_Rect fillRect = { cell->x, cell->y, *cell->width, *cell->height };
 	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 	SDL_RenderFillRect(gRenderer, &fillRect);
 
@@ -189,8 +197,8 @@ int main(int argc, char* args[])
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
 
-				Cell* newCell = new Cell(0, 0, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1.0f);
-				Cell* newCell2 = new Cell(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 1.0f);
+				Cell* newCell = new Cell(0, 0, &cellWidth, &cellHeight, 1.0f, &onColor,&offColor);
+				Cell* newCell2 = new Cell(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, &cellWidth, &cellHeight, 1.0f, &onColor, &offColor);
 
 				Grid* grid = new Grid(3);
 				grid->matrix.push_back(newCell);
