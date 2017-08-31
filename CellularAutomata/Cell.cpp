@@ -34,3 +34,17 @@ int* Cell::getWidth() {
 void Cell::setValue(float value) {
 	this->value = value;
 }
+
+
+//Functions
+void Cell::witchIt() 
+{
+	if (value == 1.0f)
+	{
+		value = 0.0f;
+	}
+	else if(value == 0.0f)
+	{
+		value = 1.0f;
+	}
+}

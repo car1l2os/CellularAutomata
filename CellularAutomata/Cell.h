@@ -16,8 +16,6 @@ public:
 	//Getters 
 	bool getStatus();
 	float getValue();
-	int* getOnColor();
-	int* getOffColor();
 	int getX();
 	int getY();
 	int* getWidth();
@@ -25,4 +23,7 @@ public:
 
 	//Setters
 	void setValue(float value);
+
+	//Functions
+	void Cell::witchIt();
 };

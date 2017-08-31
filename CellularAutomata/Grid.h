@@ -12,4 +12,5 @@ public:
 	Grid(int definition, int* cellSize);
 
 	std::vector<Cell*> matrix; //Matriz 
+
 };

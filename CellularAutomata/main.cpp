@@ -6,6 +6,8 @@
 #include <cmath>
 #include "Grid.h"
 
+//Variables
+Grid* grid;
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 600;
@@ -16,8 +18,11 @@ int onColor = 0x00;
 int offColor = 0xFF;
 
 //Tamaño celda
-int cellWidth = SCREEN_WIDTH / 20;
-int cellHeight = SCREEN_HEIGHT / 20;
+int definition = 2;
+int cellSize = SCREEN_WIDTH/definition;
+//Viejos 
+int cellWidth = SCREEN_WIDTH / 2;
+int cellHeight = SCREEN_HEIGHT / 2;
 
 //Starts up SDL and creates window
 bool init();
@@ -144,7 +149,14 @@ void DrawCell(Cell* cell)
 {
 	//Render filled quad
 	SDL_Rect fillRect = { cell->getX(), cell->getY(), *(cell->getWidth()), *(cell->getHeight()) }; //foo->bar() is the same as (*foo).bar() --> Como getWidth devuelve un puntero hay que coger el valor con *. Parentesis no necesario, puesto para claridad 
-	SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	if (cell->getValue() == 1.0f) {
+		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	}
+	
+	else {
+		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+	}
+
 	SDL_RenderFillRect(gRenderer, &fillRect); 
 
 
@@ -154,17 +166,13 @@ void DrawCell(Cell* cell)
 	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 	SDL_RenderDrawRect(gRenderer, &outlineRect);*/
 }
-
 void DrawGrid(Grid* grid)
 {
-	for (int i = 0;i < grid->matrix.size();i++)  //Está mal el "grid->matrix.size"
+	for (unsigned i = 0;i < grid->matrix.size();i++) //unsigned i porque size es unsigned y así evitamos un warning(C4018)
 	{
 		DrawCell(grid->matrix.at(i));
 	}
-
-	//*(cell->getHeight())
 }
-
 int main(int argc, char* args[])
 {
 	//Start up SDL and create window
@@ -198,16 +206,24 @@ int main(int argc, char* args[])
 					{
 						quit = true;
 					}
+
+					if (grid != NULL)
+					{
+						/*Comprobamos el evento de raton
+							--> Si click --> Averiguar que casilla está y cabiarle el value 
+						*/
+					}
+					
 				}
 
 				//Clear screen
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
 
-				Cell* newCell = new Cell(0, 0, &cellWidth, &cellHeight, 1.0f);
+				/*Cell* newCell = new Cell(0, 0, &cellWidth, &cellHeight, 1.0f);
+				DrawCell(newCell);*/
 
-				Grid* grid = new Grid(5, &cellWidth);
-
+				Grid* grid = new Grid(definition, &cellSize);
 
 				
 				//DrawCell(grid->matrix.at(0));
