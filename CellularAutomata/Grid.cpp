@@ -31,3 +31,13 @@ Grid::Grid(int definition, int* cellSize)
 }
 
 
+void Grid::clickOn(int x, int y)
+{
+	//Entonctrar casilla y cambiar valor
+}
+
+void Grid::mouseOver(int x, int y)
+{
+	//Encontrar casilla y resaltar sobre la que estás 
+
+}

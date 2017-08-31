@@ -173,6 +173,7 @@ void DrawGrid(Grid* grid)
 		DrawCell(grid->matrix.at(i));
 	}
 }
+
 int main(int argc, char* args[])
 {
 	//Start up SDL and create window
@@ -209,9 +210,21 @@ int main(int argc, char* args[])
 
 					if (grid != NULL)
 					{
-						/*Comprobamos el evento de raton
-							--> Si click --> Averiguar que casilla está y cabiarle el value 
-						*/
+
+						//If mouse event happened
+						if (e.type == SDL_MOUSEBUTTONDOWN)
+						{
+							//Get mouse position
+							int x, y;
+							SDL_GetMouseState(&x, &y);
+
+							//Pasar estas coordenadas al grid para saber en que casilla se ha pulsado
+						}
+
+						else if (e.type == SDL_MOUSEMOTION)
+						{
+							//Pasar estas coordenadas al grid para resaltar la casilla en la que estás puesto
+						}
 					}
 					
 				}
