@@ -8,16 +8,16 @@
 
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+const int SCREEN_WIDTH = 600;
+const int SCREEN_HEIGHT = 600;
 
 //Colores pantalla
 int onColor = 0x00;
 int offColor = 0xFF;
 
 //Tamaño celda
-int cellWidth = SCREEN_WIDTH / 2;
-int cellHeight = SCREEN_HEIGHT / 2;
+int cellWidth = SCREEN_WIDTH / 20;
+int cellHeight = SCREEN_HEIGHT / 20;
 
 //Starts up SDL and creates window
 bool init();
@@ -155,9 +155,14 @@ void DrawCell(Cell* cell)
 	SDL_RenderDrawRect(gRenderer, &outlineRect);*/
 }
 
-void DrawGrill(Grid* grid)
+void DrawGrid(Grid* grid)
 {
+	for (int i = 0;i < grid->matrix.size();i++)  //Está mal el "grid->matrix.size"
+	{
+		DrawCell(grid->matrix.at(i));
+	}
 
+	//*(cell->getHeight())
 }
 
 int main(int argc, char* args[])
@@ -199,17 +204,14 @@ int main(int argc, char* args[])
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
 
-				Cell* newCell = new Cell(0, 0, &cellWidth, &cellHeight, 1.0f, &onColor,&offColor);
-				Cell* newCell2 = new Cell(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, &cellWidth, &cellHeight, 1.0f, &onColor, &offColor);
+				Cell* newCell = new Cell(0, 0, &cellWidth, &cellHeight, 1.0f);
 
-				Grid* grid = new Grid(3);
-				grid->matrix.push_back(newCell);
-				grid->matrix.push_back(newCell2);
+				Grid* grid = new Grid(5, &cellWidth);
 
 
 				
-				DrawCell(grid->matrix.at(0));
-				DrawCell(grid->matrix.at(1));
+				//DrawCell(grid->matrix.at(0));
+				DrawGrid(grid);
 
 				//Update screen
 				SDL_RenderPresent(gRenderer);
