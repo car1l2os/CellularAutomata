@@ -1,11 +1,14 @@
 #pragma once
 #include <vector>
 #include "Cell.h"
+#include <string>
 
 class Grid {
 private:
 	int definition;
-	
+	int* cellSize;
+	Cell* identifyCellByPos(int x, int y);
+
 
 public:
 	//Constructor

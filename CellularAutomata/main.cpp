@@ -1,6 +1,8 @@
 //Using SDL, SDL_image, standard IO, math, and strings
 #include <SDL.h>
 #include <SDL_image.h>
+#include <iostream>
+#include <fstream>
 #include <stdio.h>
 #include <string>
 #include <cmath>
@@ -10,16 +12,16 @@
 Grid* grid;
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 600;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 800;
+const int SCREEN_HEIGHT = 800;
 
 //Colores pantalla
 int onColor = 0x00;
 int offColor = 0xFF;
 
 //Tamaño celda
-int definition = 2;
-int cellSize = SCREEN_WIDTH/definition;
+int definition = 25;
+int cellSize = SCREEN_WIDTH / definition;
 //Viejos 
 int cellWidth = SCREEN_WIDTH / 2;
 int cellHeight = SCREEN_HEIGHT / 2;
@@ -152,12 +154,12 @@ void DrawCell(Cell* cell)
 	if (cell->getValue() == 1.0f) {
 		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
 	}
-	
+
 	else {
 		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 	}
 
-	SDL_RenderFillRect(gRenderer, &fillRect); 
+	SDL_RenderFillRect(gRenderer, &fillRect);
 
 
 	//Ya lo añadiré 
@@ -193,8 +195,15 @@ int main(int argc, char* args[])
 			//Main loop flag
 			bool quit = false;
 
+			//Simulation flag 
+			bool simulate = false;
+
 			//Event handler
 			SDL_Event e;
+
+			//Grid creation
+			Grid* grid = new Grid(definition, &cellSize);
+
 
 			//While application is running
 			while (!quit)
@@ -218,6 +227,8 @@ int main(int argc, char* args[])
 							int x, y;
 							SDL_GetMouseState(&x, &y);
 
+
+							grid->clickOn(x, y);
 							//Pasar estas coordenadas al grid para saber en que casilla se ha pulsado
 						}
 
@@ -225,24 +236,46 @@ int main(int argc, char* args[])
 						{
 							//Pasar estas coordenadas al grid para resaltar la casilla en la que estás puesto
 						}
+
+
+						//If space bar pressed - Stop/resume simulation
+						else if (e.type == SDL_KEYDOWN)
+						{
+							//Select surfaces based on key press
+							switch (e.key.keysym.sym)
+							{
+							case SDLK_SPACE:
+								simulate = !simulate;
+								break;
+
+							case SDLK_c:
+
+								break;
+
+							case SDLK_s:
+								/*std::ofstream saveFile;
+								saveFile.open("saveFile.txt");
+								saveFile << grid.getStateToSave();
+								saveFile.close();*/
+								break;
+							}
+						}
 					}
-					
+
 				}
 
 				//Clear screen
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
 
-				/*Cell* newCell = new Cell(0, 0, &cellWidth, &cellHeight, 1.0f);
-				DrawCell(newCell);*/
-
-				Grid* grid = new Grid(definition, &cellSize);
-
-				
-				//DrawCell(grid->matrix.at(0));
-				DrawGrid(grid);
+				//Update grid
+				if (simulate)
+				{
+					//Update grid
+				}
 
 				//Update screen
+				DrawGrid(grid);
 				SDL_RenderPresent(gRenderer);
 			}
 		}
@@ -253,5 +286,3 @@ int main(int argc, char* args[])
 
 	return 0;
 }
-
-

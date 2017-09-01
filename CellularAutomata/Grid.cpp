@@ -12,27 +12,29 @@ que quedaran enmascarados */
 Grid::Grid(int definition, int* cellSize)
 {
 	this->definition = definition;
+	this->cellSize = cellSize;
 
-	for (int k=0, i =0, j=0 ;k < definition*definition;k++,i++)
+	for (int k = 0, i = 0, j = 0;k < definition*definition;k++, i++)
 	{
-		if ( k!= 0 && k%definition == 0)
+		if (k != 0 && k%definition == 0)
 		{
 			j++;
 			i = 0;
 		}
-
-		if(i%2 == 0)
-			matrix.push_back(new Cell((i*(*cellSize)), *cellSize * j,cellSize, cellSize, 1.0f));
-		else
-		{
-			matrix.push_back(new Cell((i*(*cellSize)), *cellSize * j, cellSize, cellSize, 0.0f));
-		}
+		matrix.push_back(new Cell((i*(*cellSize)), *cellSize * j, cellSize, cellSize, 0.0f));
 	}
+}
+
+Cell* Grid::identifyCellByPos(int x, int y)
+{
+	int debug = ((y / *cellSize) * definition) + (x / *cellSize);
+	return matrix[debug];
 }
 
 
 void Grid::clickOn(int x, int y)
 {
+	identifyCellByPos(x, y)->witchIt();
 	//Entonctrar casilla y cambiar valor
 }
 
