@@ -267,15 +267,15 @@ int main(int argc, char* args[])
 								simulate = !simulate;
 								break;
 
-							case SDLK_c:
+							case SDLK_l: //Load state
 
 								break;
 
-							case SDLK_s:
-								/*std::ofstream saveFile;
+							case SDLK_s: //Save state
+								std::ofstream saveFile;
 								saveFile.open("saveFile.txt");
-								saveFile << grid.getStateToSave();
-								saveFile.close();*/
+								saveFile << grid->saveState();
+								saveFile.close();
 								break;
 							}
 						}

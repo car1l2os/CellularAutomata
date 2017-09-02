@@ -10,6 +10,8 @@ private:
 	Cell* identifyCellByPos(int x, int y);
 
 
+
+
 public:
 	//Constructor
 	Grid(int definition, int* cellSize);
@@ -19,4 +21,7 @@ public:
 
 	void clickOn(int x, int y);
 	void mouseOver(int x, int y);
+
+	std::string saveState();
+	std::string chargeState();
 };

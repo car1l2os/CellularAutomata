@@ -30,6 +30,25 @@ Cell* Grid::identifyCellByPos(int x, int y)
 	return matrix[((y / *cellSize) * definition) + (x / *cellSize)];
 }
 
+std::string Grid::saveState()
+{
+	std::string saveString("DEFINITION$" + std::to_string(definition) + "#CELLSIZE$" + std::to_string(*cellSize) + "#VALUES$");
+
+	for (int i = 0;i < matrix.size();i++)
+	{
+		saveString = saveString + std::to_string(matrix[i]->getValue()) + ";";
+	}
+
+	saveString = saveString + "#";
+
+	return saveString;
+}
+
+std::string Grid::chargeState()
+{
+	std::string saveString("DEFINITION$" + std::to_string(definition) + "#CELLSIZE$" + std::to_string(*cellSize) + "#VALUES$");
+	return saveString;
+}
 
 void Grid::clickOn(int x, int y)
 {
