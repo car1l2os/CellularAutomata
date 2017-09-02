@@ -147,32 +147,47 @@ SDL_Texture* loadTexture(std::string path)
 	return newTexture;
 }
 
-void DrawCell(Cell* cell)
+void DrawCell(Cell* cell, bool highlighted)
 {
 	//Render filled quad
 	SDL_Rect fillRect = { cell->getX(), cell->getY(), *(cell->getWidth()), *(cell->getHeight()) }; //foo->bar() is the same as (*foo).bar() --> Como getWidth devuelve un puntero hay que coger el valor con *. Parentesis no necesario, puesto para claridad 
-	if (cell->getValue() == 1.0f) {
-		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-	}
+	if (highlighted)
+	{
+		if (cell->getValue() == 1.0f)
+			SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x7F, 0x50, 0xFF);
+		else
+			SDL_SetRenderDrawColor(gRenderer, 0xAA, 0x5A, 0x20, 0xFF);
 
-	else {
+
+		//Otra posiblidad es recuadrar la casilla en la que estás . Hay que pintar cuadro con if/else y luego recuadrar con este if solo 
+		/*//Render outlined quad
+		SDL_Rect outlineRect = { cell->x, cell->y, cell->width, cell->height };
 		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+		SDL_RenderDrawRect(gRenderer, &outlineRect);*/
 	}
+	else	if (cell->getValue() == 1.0f) 
+			{
+				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+			}
+
+			else 
+			{
+				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+			}
 
 	SDL_RenderFillRect(gRenderer, &fillRect);
 
 
-	//Ya lo añadiré 
-	/*//Render outlined quad
-	SDL_Rect outlineRect = { cell->x, cell->y, cell->width, cell->height };
-	SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-	SDL_RenderDrawRect(gRenderer, &outlineRect);*/
+
 }
 void DrawGrid(Grid* grid)
 {
 	for (unsigned i = 0;i < grid->matrix.size();i++) //unsigned i porque size es unsigned y así evitamos un warning(C4018)
 	{
-		DrawCell(grid->matrix.at(i));
+		if(grid->highlightedCell != grid->matrix.at(i))
+			DrawCell(grid->matrix.at(i),false);
+		else
+			DrawCell(grid->matrix.at(i), true);
 	}
 }
 
@@ -234,6 +249,10 @@ int main(int argc, char* args[])
 
 						else if (e.type == SDL_MOUSEMOTION)
 						{
+							int x, y;
+							SDL_GetMouseState(&x, &y);
+
+							grid->mouseOver(x, y);
 							//Pasar estas coordenadas al grid para resaltar la casilla en la que estás puesto
 						}
 

@@ -27,19 +27,18 @@ Grid::Grid(int definition, int* cellSize)
 
 Cell* Grid::identifyCellByPos(int x, int y)
 {
-	int debug = ((y / *cellSize) * definition) + (x / *cellSize);
-	return matrix[debug];
+	return matrix[((y / *cellSize) * definition) + (x / *cellSize)];
 }
 
 
 void Grid::clickOn(int x, int y)
 {
-	identifyCellByPos(x, y)->witchIt();
 	//Entonctrar casilla y cambiar valor
+	identifyCellByPos(x, y)->witchIt();
 }
 
 void Grid::mouseOver(int x, int y)
 {
 	//Encontrar casilla y resaltar sobre la que estás 
-
+	highlightedCell = identifyCellByPos(x, y);
 }

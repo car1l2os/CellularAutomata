@@ -15,6 +15,7 @@ public:
 	Grid(int definition, int* cellSize);
 
 	std::vector<Cell*> matrix; //Matriz 
+	Cell* highlightedCell;
 
 	void clickOn(int x, int y);
 	void mouseOver(int x, int y);
