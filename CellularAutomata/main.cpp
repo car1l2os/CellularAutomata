@@ -268,7 +268,7 @@ int main(int argc, char* args[])
 						//If space bar pressed - Stop/resume simulation
 						else if (e.type == SDL_KEYDOWN)
 						{
-							//Select surfaces based on key press
+							//Select surfaces  based on key press
 							switch (e.key.keysym.sym)
 							{
 							case SDLK_SPACE:
