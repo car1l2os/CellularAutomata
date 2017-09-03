@@ -191,6 +191,14 @@ void DrawGrid(Grid* grid)
 	}
 }
 
+std::string ReadFile(std::string fileName)
+{
+	std::ifstream inFile(fileName);
+	std::string inString((std::istreambuf_iterator<char>(inFile)), std::istreambuf_iterator<char>());
+
+	return inString;
+}
+
 int main(int argc, char* args[])
 {
 	//Start up SDL and create window
@@ -268,7 +276,9 @@ int main(int argc, char* args[])
 								break;
 
 							case SDLK_l: //Load state
+								//No se podían hacer las definiciones directamente en un switch
 
+								grid->chargeState(ReadFile("saveFile.txt"));
 								break;
 
 							case SDLK_s: //Save state

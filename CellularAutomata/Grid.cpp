@@ -25,6 +25,22 @@ Grid::Grid(int definition, int* cellSize)
 	}
 }
 
+Grid::Grid(int definition, int * cellSize, std::vector<float> values)
+{
+	this->definition = definition;
+	this->cellSize = cellSize;
+
+	for (int k = 0, i = 0, j = 0;k < definition*definition;k++, i++)
+	{
+		if (k != 0 && k%definition == 0)
+		{
+			j++;
+			i = 0;
+		}
+		matrix.push_back(new Cell((i*(*cellSize)), *cellSize * j, cellSize, cellSize, values[i]));
+	}
+}
+
 Cell* Grid::identifyCellByPos(int x, int y)
 {
 	return matrix[((y / *cellSize) * definition) + (x / *cellSize)];
@@ -44,10 +60,10 @@ std::string Grid::saveState()
 	return saveString;
 }
 
-std::string Grid::chargeState()
+void Grid::chargeState(std::string inString)
 {
-	std::string saveString("DEFINITION$" + std::to_string(definition) + "#CELLSIZE$" + std::to_string(*cellSize) + "#VALUES$");
-	return saveString;
+
+
 }
 
 void Grid::clickOn(int x, int y)
