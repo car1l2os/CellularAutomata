@@ -268,6 +268,7 @@ int main(int argc, char* args[])
 						//If space bar pressed - Stop/resume simulation
 						else if (e.type == SDL_KEYDOWN)
 						{
+							Grid* n_grid;
 							//Select surfaces  based on key press
 							switch (e.key.keysym.sym)
 							{
@@ -278,7 +279,10 @@ int main(int argc, char* args[])
 							case SDLK_l: //Load state
 								//No se podían hacer las definiciones directamente en un switch
 
-								grid->chargeState(ReadFile("saveFile.txt"));
+								n_grid = grid->chargeState(ReadFile("saveFile.txt"),&cellSize);
+								//Destruir grid antigua con el destructor
+								grid = n_grid;
+
 								break;
 
 							case SDLK_s: //Save state

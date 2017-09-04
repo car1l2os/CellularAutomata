@@ -1,8 +1,7 @@
-﻿  main.cpp
-  Grid.cpp
+﻿  Grid.cpp
 d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\grid.cpp(53): warning C4018: '<': no coinciden signed/unsigned
   Generando código...
   Omitiendo... (no se detectaron cambios relevantes)
-  Cell.cpp
+  main.cpp
   CellularAutomata.vcxproj -> D:\MisArchivos\Proyectos\Universidad\InteligenciaArtificial\CellularAutomata\Debug\CellularAutomata.exe
   CellularAutomata.vcxproj -> D:\MisArchivos\Proyectos\Universidad\InteligenciaArtificial\CellularAutomata\Debug\CellularAutomata.pdb (Partial PDB)

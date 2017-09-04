@@ -25,7 +25,7 @@ Grid::Grid(int definition, int* cellSize)
 	}
 }
 
-Grid::Grid(int definition, int * cellSize, std::vector<float> values)
+Grid::Grid(int definition, int* cellSize, std::vector<float> values)
 {
 	this->definition = definition;
 	this->cellSize = cellSize;
@@ -48,7 +48,7 @@ Cell* Grid::identifyCellByPos(int x, int y)
 
 std::string Grid::saveState()
 {
-	std::string saveString("DEFINITION$" + std::to_string(definition) + "#CELLSIZE$" + std::to_string(*cellSize) + "#VALUES$");
+	std::string saveString("#DEFINITION$" + std::to_string(definition) + "#CELLSIZE$" + std::to_string(*cellSize) + "#VALUES$");
 
 	for (int i = 0;i < matrix.size();i++)
 	{
@@ -60,9 +60,168 @@ std::string Grid::saveState()
 	return saveString;
 }
 
-void Grid::chargeState(std::string inString)
+Grid* Grid::chargeState(std::string inString, int* cellSizeDirection)
 {
 
+	int n_definition = -1;
+	std::vector<float> n_values;
+	int valuesIndex = 0;
+	std::string readed("");
+
+	for (std::string::size_type i = 0; i < inString.size();i++)
+	{
+		std::cout << i << std::endl;
+
+		if (inString[i] == '$') //Star reading value
+		{
+			i++; //Pasamos a los valores 
+
+			if (readed == "DEFINITION") //Almacenar en ultima posicion del vector 
+			{
+				readed = "";
+				while (inString[i] != '#') //Hasta que no encuentres otro parametro a leer	
+				{
+					readed += inString[i];
+					i++;
+				}
+				n_definition = atoi(readed.c_str());
+				readed = "";
+			}
+			else if (readed == "VALUES") //Almacenar en un vector 
+			{
+				readed = "";
+				while (inString[i] != '#') //Hasta que no encuentres otro parametro a leer	
+				{
+					while (inString[i] != ';')
+					{
+						readed += inString[i];
+						i++;
+					}
+					n_values.push_back(std::stof(readed));
+					valuesIndex++;
+					readed = "";
+					i++;
+				}
+			}
+			else if (readed == "CELLSIZE")
+			{
+				readed = "";
+				while (inString[i] != '#') //Hasta que no encuentres otro parametro a leer	
+				{
+					readed += inString[i];
+					i++;
+				}
+				*cellSizeDirection = atoi(readed.c_str());
+				readed = "";
+			}
+		}
+		else if (inString[i] == '#') //Change parameter
+		{
+			readed = "";
+		}
+		/*else if (inString[i] == ';') //Change value of Cell
+		{
+
+		}*/
+		else //Reading 
+		{
+			readed += inString[i];
+		}
+
+	}
+
+	std::cout << "SALE DEL FOR" << std::endl;
+
+
+	return new Grid(n_definition, cellSizeDirection, n_values);
+}
+
+std::vector<Cell*> Grid::getNeighbours(Cell * cell, int cellIndex)
+{
+	std::vector<Cell*> neighbours;
+
+	if ((cell->getY() / *(cell->getHeight())) == 0) //Franja superior
+	{
+		if ((cell->getX() / *(cell->getWidth())) == 0) //Esquina superior izquierda
+		{
+			neighbours.push_back(matrix.at(1));
+			neighbours.push_back(matrix.at(definition));
+			neighbours.push_back(matrix.at(definition+1));
+		}
+		else if ((cell->getX() / *(cell->getWidth())) == definition - 1) //Esquina superior derecha
+		{
+			neighbours.push_back(matrix.at(definition-2));
+			neighbours.push_back(matrix.at((definition*2)-1));
+			neighbours.push_back(matrix.at((definition * 2) - 2));
+		}
+		else
+		{
+			neighbours.push_back(matrix.at(cellIndex	-1								));
+			neighbours.push_back(matrix.at(cellIndex	+ 1								));
+
+			neighbours.push_back(matrix.at(cellIndex + definition - 1));
+			neighbours.push_back(matrix.at(cellIndex + definition));
+			neighbours.push_back(matrix.at(cellIndex + definition +1));
+		}
+	}
+	else if ((cell->getX() / *(cell->getWidth())) == 0) //Franja izquierda
+	{
+		if ((cell->getY() / *(cell->getHeight())) == (definition - 1)) //Esquina inferior izquierda
+		{
+			neighbours.push_back(matrix.at(	(definition*(definition-2))					));
+			neighbours.push_back(matrix.at(	(definition*(definition - 2))+1				));
+			neighbours.push_back(matrix.at(	(definition*(definition - 1)) + 1			));
+		}
+		else
+		{
+			neighbours.push_back(matrix.at(cellIndex - definition));
+			neighbours.push_back(matrix.at(cellIndex - definition + 1));
+
+			neighbours.push_back(matrix.at(cellIndex +1));
+
+			neighbours.push_back(matrix.at(cellIndex + definition));
+			neighbours.push_back(matrix.at(cellIndex + definition + 1));
+		}
+	}
+	else if ((cell->getY() / *(cell->getHeight())) == (definition - 1)) //Franja inferior
+	{
+		if ((cell->getX() / *(cell->getWidth())) == (definition - 1)) //Esquina inferior derecha
+		{
+			neighbours.push_back(matrix.at(	(definition*(definition-1))+(definition-1) -1  						)); //Anterior
+			neighbours.push_back(matrix.at(	(definition*(definition - 2)) + (definition - 1)					)); //Una fila por encima
+			neighbours.push_back(matrix.at((definition*(definition - 2)) + (definition - 1)-1					)); //Fila por encima una columna menos 
+		}
+	}
+	else if ((cell->getX() / *(cell->getWidth())) == (definition - 1)) //Franja derecha
+	{
+		neighbours.push_back(matrix.at(cellIndex - definition - 1));
+		neighbours.push_back(matrix.at(cellIndex - definition));
+
+		neighbours.push_back(matrix.at(cellIndex - 1));
+
+		neighbours.push_back(matrix.at(cellIndex + definition -1));
+		neighbours.push_back(matrix.at(cellIndex + definition));
+	}
+	else //Caso general
+	{
+		neighbours.push_back(matrix.at(cellIndex - definition - 1	));
+		neighbours.push_back(matrix.at(cellIndex - definition		));
+		neighbours.push_back(matrix.at(cellIndex - definition + 1	));
+
+		neighbours.push_back(matrix.at(cellIndex - 1));
+		neighbours.push_back(matrix.at(cellIndex + 1));
+
+		neighbours.push_back(matrix.at(cellIndex + definition - 1	));
+		neighbours.push_back(matrix.at(cellIndex + definition		));
+		neighbours.push_back(matrix.at(cellIndex + definition + 1	));
+	}
+
+
+	return neighbours;
+}
+
+void Grid::GameOfLiveSimulation()
+{
 
 }
 
