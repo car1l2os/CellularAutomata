@@ -76,7 +76,7 @@ Grid* Grid::chargeState(std::string inString, int* cellSizeDirection)
 		{
 			i++; //Pasamos a los valores 
 
-			if (readed == "DEFINITION") //Almacenar en ultima posicion del vector 
+			if (readed == "DEFINITION") //Almacenar  en ultima posicion del vector 
 			{
 				readed = "";
 				while (inString[i] != '#') //Hasta que no encuentres otro parametro a leer	
