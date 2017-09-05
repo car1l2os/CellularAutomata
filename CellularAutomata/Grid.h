@@ -8,6 +8,8 @@ private:
 	int definition;
 	int* cellSize;
 	Cell* identifyCellByPos(int x, int y);
+	std::vector<float> GetMatrixValues();
+	void SetMatrixValues(std::vector<float> values);
 
 
 
@@ -36,6 +38,6 @@ public:
 
 
 	//Simulations
-	std::vector<Cell*> getNeighbours(Cell* cell, int cellIndex);
+	std::vector<Cell*> GetNeighbours(Cell* cell, int cellIndex);
 	void GameOfLiveSimulation();
 };

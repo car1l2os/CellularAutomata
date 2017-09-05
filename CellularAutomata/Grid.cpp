@@ -46,6 +46,30 @@ Cell* Grid::identifyCellByPos(int x, int y)
 	return matrix[((y / *cellSize) * definition) + (x / *cellSize)];
 }
 
+std::vector<float> Grid::GetMatrixValues()
+{
+
+	std::vector<float> values;
+
+	for (int i = 0;i < matrix.size();i++)
+	{
+		values.push_back(matrix.at(i)->getValue());
+	}
+
+	return values;
+}
+
+void Grid::SetMatrixValues(std::vector<float> values)
+{
+	if (matrix.size() == values.size())
+	{
+		for (int i = 0;i < values.size();i++)
+		{
+			matrix.at(i)->setValue(values[i]);
+		}
+	}
+}
+
 std::string Grid::saveState()
 {
 	std::string saveString("#DEFINITION$" + std::to_string(definition) + "#CELLSIZE$" + std::to_string(*cellSize) + "#VALUES$");
@@ -136,7 +160,7 @@ Grid* Grid::chargeState(std::string inString, int* cellSizeDirection)
 	return new Grid(n_definition, cellSizeDirection, n_values);
 }
 
-std::vector<Cell*> Grid::getNeighbours(Cell * cell, int cellIndex)
+std::vector<Cell*> Grid::GetNeighbours(Cell * cell, int cellIndex)
 {
 	std::vector<Cell*> neighbours;
 
@@ -222,7 +246,41 @@ std::vector<Cell*> Grid::getNeighbours(Cell * cell, int cellIndex)
 
 void Grid::GameOfLiveSimulation()
 {
+	std::vector<float> matrixAux = GetMatrixValues();
 
+	for (int i = 0; i < matrix.size(); i++)
+	{
+		std::vector<Cell*> aux = GetNeighbours(matrix.at(i), i);
+		int count = 0;
+
+		if (matrix.at(i)->getValue() == 1.0f) //Si viva
+		{
+			for (int j = 0; j < aux.size();j++)
+			{
+				if (aux.at(j)->getValue() == 1.0f)
+					count++;
+			}
+
+			if (count != 2 && count != 3)
+				matrixAux[i] = 0.0f; //Matada
+		}
+		else if (matrix.at(i)->getValue() == 0.0f) //Si muerta
+		{
+			for (int j = 0; j < aux.size();j++)
+			{
+				if (aux.at(j)->getValue() == 1.0f)
+					count++;
+			}
+
+			if (count == 3)
+				matrixAux[i] = 1.0f; //Nacida
+		}
+		
+	}
+
+	SetMatrixValues(matrixAux);
+
+	//Hay que destruir matrixAux
 }
 
 void Grid::clickOn(int x, int y)

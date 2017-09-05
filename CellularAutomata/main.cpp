@@ -5,11 +5,18 @@
 #include <fstream>
 #include <stdio.h>
 #include <string>
+#include <time.h>
 #include <cmath>
 #include "Grid.h"
 
 //Variables
 Grid* grid;
+
+//The timer starting time
+Uint32 start = 0;
+
+//The timer start/stop flag
+bool running = false;
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 800;
@@ -220,6 +227,7 @@ int main(int argc, char* args[])
 
 			//Simulation flag 
 			bool simulate = false;
+			bool nextStep = false;
 
 			//Event handler
 			SDL_Event e;
@@ -227,10 +235,18 @@ int main(int argc, char* args[])
 			//Grid creation
 			Grid* grid = new Grid(definition, &cellSize);
 
+			//Start the timer
+			clock_t t;
+			float timeCounter = 0.0f;
+			
+
 
 			//While application is running
 			while (!quit)
 			{
+				//Tomamos el tiempo
+				t = clock();
+
 				//Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
 				{
@@ -276,6 +292,11 @@ int main(int argc, char* args[])
 								simulate = !simulate;
 								break;
 
+							case SDLK_RIGHT:
+								grid->GameOfLiveSimulation();
+								simulate = false;
+								break;
+
 							case SDLK_l: //Load state
 								//No se podían hacer las definiciones directamente en un switch
 
@@ -297,15 +318,28 @@ int main(int argc, char* args[])
 
 				}
 
+
 				//Clear screen
 				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
 				SDL_RenderClear(gRenderer);
 
-				//Update grid
 				if (simulate)
 				{
-					//Update grid
+					//Update Grid
+					t = clock() - t;
+					timeCounter += t;
+
+					if (timeCounter >= 1.0)
+					{
+						grid->GameOfLiveSimulation();
+						timeCounter = 0.0f;
+					}
 				}
+				else
+				{
+					timeCounter = 0.0f;
+				}
+
 
 				//Update screen
 				DrawGrid(grid);
