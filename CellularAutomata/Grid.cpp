@@ -25,22 +25,6 @@ Grid::Grid(int definition, int* cellSize)
 	}
 }
 
-Grid::Grid(int definition, int* cellSize, std::vector<float> values)
-{
-	this->definition = definition;
-	this->cellSize = cellSize;
-
-	for (int k = 0, i = 0, j = 0;k < definition*definition;k++, i++)
-	{
-		if (k != 0 && k%definition == 0)
-		{
-			j++;
-			i = 0;
-		}
-		matrix.push_back(new Cell((i*(*cellSize)), *cellSize * j, cellSize, cellSize, values[i]));
-	}
-}
-
 Cell* Grid::identifyCellByPos(int x, int y)
 {
 	return matrix[((y / *cellSize) * definition) + (x / *cellSize)];
@@ -84,10 +68,12 @@ std::string Grid::saveState()
 	return saveString;
 }
 
-Grid* Grid::chargeState(std::string inString, int* cellSizeDirection)
+void Grid::chargeState(std::string inString, int* cellSizeDirection)
 {
 
 	int n_definition = -1;
+	int n_cellSize = -1;
+
 	std::vector<float> n_values;
 	int valuesIndex = 0;
 	std::string readed("");
@@ -135,7 +121,7 @@ Grid* Grid::chargeState(std::string inString, int* cellSizeDirection)
 					readed += inString[i];
 					i++;
 				}
-				*cellSizeDirection = atoi(readed.c_str());
+				n_cellSize = atoi(readed.c_str());
 				readed = "";
 			}
 		}
@@ -156,8 +142,12 @@ Grid* Grid::chargeState(std::string inString, int* cellSizeDirection)
 
 	std::cout << "SALE DEL FOR" << std::endl;
 
+	*cellSizeDirection = n_cellSize;
+	definition = n_definition;
+	SetMatrixValues(n_values);
 
-	return new Grid(n_definition, cellSizeDirection, n_values);
+
+	//return new Grid(n_definition, cellSizeDirection, n_values);
 }
 
 std::vector<Cell*> Grid::GetNeighbours(Cell * cell, int cellIndex)
@@ -170,38 +160,38 @@ std::vector<Cell*> Grid::GetNeighbours(Cell * cell, int cellIndex)
 		{
 			neighbours.push_back(matrix.at(1));
 			neighbours.push_back(matrix.at(definition));
-			neighbours.push_back(matrix.at(definition+1));
+			neighbours.push_back(matrix.at(definition + 1));
 		}
 		else if ((cell->getX() / *(cell->getWidth())) == definition - 1) //Esquina superior derecha
 		{
-			neighbours.push_back(matrix.at(definition-2));
-			neighbours.push_back(matrix.at((definition*2)-1));
+			neighbours.push_back(matrix.at(definition - 2));
+			neighbours.push_back(matrix.at((definition * 2) - 1));
 			neighbours.push_back(matrix.at((definition * 2) - 2));
 		}
 		else
 		{
-			neighbours.push_back(matrix.at(cellIndex	-1								));
-			neighbours.push_back(matrix.at(cellIndex	+ 1								));
+			neighbours.push_back(matrix.at(cellIndex - 1));
+			neighbours.push_back(matrix.at(cellIndex + 1));
 
 			neighbours.push_back(matrix.at(cellIndex + definition - 1));
 			neighbours.push_back(matrix.at(cellIndex + definition));
-			neighbours.push_back(matrix.at(cellIndex + definition +1));
+			neighbours.push_back(matrix.at(cellIndex + definition + 1));
 		}
 	}
 	else if ((cell->getX() / *(cell->getWidth())) == 0) //Franja izquierda
 	{
 		if ((cell->getY() / *(cell->getHeight())) == (definition - 1)) //Esquina inferior izquierda
 		{
-			neighbours.push_back(matrix.at(	(definition*(definition-2))					));
-			neighbours.push_back(matrix.at(	(definition*(definition - 2))+1				));
-			neighbours.push_back(matrix.at(	(definition*(definition - 1)) + 1			));
+			neighbours.push_back(matrix.at((definition*(definition - 2))));
+			neighbours.push_back(matrix.at((definition*(definition - 2)) + 1));
+			neighbours.push_back(matrix.at((definition*(definition - 1)) + 1));
 		}
 		else
 		{
 			neighbours.push_back(matrix.at(cellIndex - definition));
 			neighbours.push_back(matrix.at(cellIndex - definition + 1));
 
-			neighbours.push_back(matrix.at(cellIndex +1));
+			neighbours.push_back(matrix.at(cellIndex + 1));
 
 			neighbours.push_back(matrix.at(cellIndex + definition));
 			neighbours.push_back(matrix.at(cellIndex + definition + 1));
@@ -211,9 +201,22 @@ std::vector<Cell*> Grid::GetNeighbours(Cell * cell, int cellIndex)
 	{
 		if ((cell->getX() / *(cell->getWidth())) == (definition - 1)) //Esquina inferior derecha
 		{
-			neighbours.push_back(matrix.at(	(definition*(definition-1))+(definition-1) -1  						)); //Anterior
-			neighbours.push_back(matrix.at(	(definition*(definition - 2)) + (definition - 1)					)); //Una fila por encima
-			neighbours.push_back(matrix.at((definition*(definition - 2)) + (definition - 1)-1					)); //Fila por encima una columna menos 
+			neighbours.push_back(matrix.at((definition*(definition - 1)) + (definition - 1) - 1)); //Anterior
+			neighbours.push_back(matrix.at((definition*(definition - 2)) + (definition - 1))); //Una fila por encima
+			neighbours.push_back(matrix.at((definition*(definition - 2)) + (definition - 1) - 1)); //Fila por encima una columna menos 
+		}
+		else
+		{
+			neighbours.push_back(matrix.at(cellIndex - definition - 1));
+			neighbours.push_back(matrix.at(cellIndex - definition));
+			neighbours.push_back(matrix.at(cellIndex - definition + 1));
+
+			neighbours.push_back(matrix.at(cellIndex - 1));
+			neighbours.push_back(matrix.at(cellIndex + 1));
+
+
+
+
 		}
 	}
 	else if ((cell->getX() / *(cell->getWidth())) == (definition - 1)) //Franja derecha
@@ -223,21 +226,21 @@ std::vector<Cell*> Grid::GetNeighbours(Cell * cell, int cellIndex)
 
 		neighbours.push_back(matrix.at(cellIndex - 1));
 
-		neighbours.push_back(matrix.at(cellIndex + definition -1));
+		neighbours.push_back(matrix.at(cellIndex + definition - 1));
 		neighbours.push_back(matrix.at(cellIndex + definition));
 	}
 	else //Caso general
 	{
-		neighbours.push_back(matrix.at(cellIndex - definition - 1	));
-		neighbours.push_back(matrix.at(cellIndex - definition		));
-		neighbours.push_back(matrix.at(cellIndex - definition + 1	));
+		neighbours.push_back(matrix.at(cellIndex - definition - 1));
+		neighbours.push_back(matrix.at(cellIndex - definition));
+		neighbours.push_back(matrix.at(cellIndex - definition + 1));
 
 		neighbours.push_back(matrix.at(cellIndex - 1));
 		neighbours.push_back(matrix.at(cellIndex + 1));
 
-		neighbours.push_back(matrix.at(cellIndex + definition - 1	));
-		neighbours.push_back(matrix.at(cellIndex + definition		));
-		neighbours.push_back(matrix.at(cellIndex + definition + 1	));
+		neighbours.push_back(matrix.at(cellIndex + definition - 1));
+		neighbours.push_back(matrix.at(cellIndex + definition));
+		neighbours.push_back(matrix.at(cellIndex + definition + 1));
 	}
 
 
@@ -275,7 +278,7 @@ void Grid::GameOfLiveSimulation()
 			if (count == 3)
 				matrixAux[i] = 1.0f; //Nacida
 		}
-		
+
 	}
 
 	SetMatrixValues(matrixAux);

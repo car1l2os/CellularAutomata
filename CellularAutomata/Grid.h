@@ -17,7 +17,6 @@ private:
 public:
 	//Constructor
 	Grid(int definition, int* cellSize);
-	Grid(int definition, int* cellSize, std::vector<float> values); //Para crear una grid ya "existente" 
 
 	//Var
 	std::vector<Cell*> matrix; //Matriz 
@@ -26,10 +25,10 @@ public:
 	//Mouse
 	void clickOn(int x, int y);
 	void mouseOver(int x, int y);
-	
+
 	//Save/load
 	std::string saveState();
-	Grid* chargeState(std::string inString, int* cellSizeDirection);
+	void chargeState(std::string inString, int* cellSizeDirection);
 
 	//Statics
 	int const POS_VECTOR_DEFINITION = 0;

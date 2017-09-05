@@ -238,14 +238,14 @@ int main(int argc, char* args[])
 			//Start the timer
 			clock_t t;
 			float timeCounter = 0.0f;
-			
 
+			//Tomamos el tiempo
+			t = clock();
 
 			//While application is running
 			while (!quit)
 			{
-				//Tomamos el tiempo
-				t = clock();
+
 
 				//Handle events on queue
 				while (SDL_PollEvent(&e) != 0)
@@ -298,11 +298,10 @@ int main(int argc, char* args[])
 								break;
 
 							case SDLK_l: //Load state
-								//No se podían hacer las definiciones directamente en un switch
+										 //No se podían hacer las definiciones directamente en un switch
 
-								n_grid = grid->chargeState(ReadFile("saveFile.txt"),&cellSize);
+								grid->chargeState(ReadFile("saveFile.txt"), &cellSize);
 								//Destruir grid antigua con el destructor
-								grid = n_grid;
 
 								break;
 
@@ -327,12 +326,13 @@ int main(int argc, char* args[])
 				{
 					//Update Grid
 					t = clock() - t;
-					timeCounter += t;
+					timeCounter = (float)t / CLOCKS_PER_SEC;
 
-					if (timeCounter >= 1.0)
+					if (timeCounter >= 1.0f)
 					{
 						grid->GameOfLiveSimulation();
 						timeCounter = 0.0f;
+						t = clock();
 					}
 				}
 				else
