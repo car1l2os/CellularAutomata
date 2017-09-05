@@ -1,6 +1,6 @@
 #include "Cell.h"
 
-//Constructo r
+//Constructor
 Cell::Cell(int x, int y, int* width, int* height, float value)
 {
 	 this->x = x;
