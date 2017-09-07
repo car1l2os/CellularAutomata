@@ -37,7 +37,7 @@ void Cell::setValue(float value) {
 
 
 //Functions
-void Cell::witchIt() 
+void Cell::switchIt() 
 {
 	if (value == 1.0f)
 	{
@@ -47,4 +47,24 @@ void Cell::witchIt()
 	{
 		value = 1.0f;
 	}
+}
+void Cell::nextValue()
+{
+	if (value == 0.0f)
+	{
+		value = 0.25f;
+	}
+	else if (value == 0.25f)
+	{
+		value = 0.5f;
+	}
+	else if (value == 0.5f)
+	{
+		value = 0.75f;
+	}
+	else if (value == 0.75f)
+	{
+		value = 0.0f;
+	}
+
 }

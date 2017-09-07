@@ -11,6 +11,11 @@ private:
 	std::vector<float> GetMatrixValues();
 	void SetMatrixValues(std::vector<float> values);
 
+	//Simulation flag
+	int simulation_flag = 0;
+	const int GAME_OF_LIVE = 0;
+	const int WIRE_WORLD = 1;
+
 
 
 
@@ -39,4 +44,10 @@ public:
 	//Simulations
 	std::vector<Cell*> GetNeighbours(Cell* cell, int cellIndex);
 	void GameOfLiveSimulation();
+
+	//Geter & seter
+	int getSimulationFlag();
+	void setSimulationFlag(int value);
+
+
 };

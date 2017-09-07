@@ -12,6 +12,10 @@
 //Variables
 Grid* grid;
 
+
+
+
+
 //The timer starting time
 Uint32 start = 0;
 
@@ -154,7 +158,8 @@ SDL_Texture* loadTexture(std::string path)
 	return newTexture;
 }
 
-void DrawCell(Cell* cell, bool highlighted)
+
+void DrawCell_GameOfLive(Cell* cell, bool highlighted)
 {
 	//Render filled quad
 	SDL_Rect fillRect = { cell->getX(), cell->getY(), *(cell->getWidth()), *(cell->getHeight()) }; //foo->bar() is the same as (*foo).bar() --> Como getWidth devuelve un puntero hay que coger el valor con *. Parentesis no necesario, puesto para claridad 
@@ -187,16 +192,58 @@ void DrawCell(Cell* cell, bool highlighted)
 
 
 }
+void DrawCell_WireWorld(Cell* cell, bool highlighted)
+{
+	//Render filled quad
+	SDL_Rect fillRect = { cell->getX(), cell->getY(), *(cell->getWidth()), *(cell->getHeight()) }; //foo->bar() is the same as (*foo).bar() --> Como getWidth devuelve un puntero hay que coger el valor con *. Parentesis no necesario, puesto para claridad 
+	
+	if (cell->getValue() == 0.0f)
+	{
+		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+	}
+
+	else if(cell->getValue() == 0.25f)
+	{
+		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
+	}
+	else if (cell->getValue() == 0.5f)
+	{
+		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	}
+	else if (cell->getValue() == 0.75f)
+	{
+		SDL_SetRenderDrawColor(gRenderer, 0x66, 0x66, 0x00, 0xFF);
+	}
+	
+	SDL_RenderFillRect(gRenderer, &fillRect);
+
+	
+	
+	if (highlighted)
+	{
+		SDL_Rect outlineRect = { cell->getX(), cell->getY(), *(cell->getWidth()), *(cell->getHeight()) };
+		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0xFF, 0xFF, 0xFF);
+		SDL_RenderDrawRect(gRenderer, &outlineRect);
+	}
+
+
+
+
+}
+
 void DrawGrid(Grid* grid)
 {
 	for (unsigned i = 0;i < grid->matrix.size();i++) //unsigned i porque size es unsigned y así evitamos un warning(C4018)
 	{
 		if(grid->highlightedCell != grid->matrix.at(i))
-			DrawCell(grid->matrix.at(i),false);
+			DrawCell_GameOfLive(grid->matrix.at(i),false);
 		else
-			DrawCell(grid->matrix.at(i), true);
+			DrawCell_GameOfLive(grid->matrix.at(i), true);
 	}
 }
+
+
+
 
 std::string ReadFile(std::string fileName)
 {

@@ -25,5 +25,7 @@ public:
 	void setValue(float value);
 
 	//Functions
-	void Cell::witchIt();
+	void Cell::switchIt();
+	void Cell::nextValue();
+
 };

@@ -286,10 +286,24 @@ void Grid::GameOfLiveSimulation()
 	//Hay que destruir matrixAux
 }
 
+int Grid::getSimulationFlag()
+{
+	return simulation_flag;
+}
+void Grid::setSimulationFlag(int value)
+{
+	simulation_flag = value;
+}
+
 void Grid::clickOn(int x, int y)
 {
 	//Entonctrar casilla y cambiar valor
-	identifyCellByPos(x, y)->witchIt();
+
+	if(simulation_flag == GAME_OF_LIVE)
+		identifyCellByPos(x, y)->switchIt();
+
+	else if (simulation_flag == WIRE_WORLD)
+			identifyCellByPos(x, y)->nextValue();
 }
 
 void Grid::mouseOver(int x, int y)
