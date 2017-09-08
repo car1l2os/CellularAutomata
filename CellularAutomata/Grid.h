@@ -23,7 +23,7 @@ public:
 	Grid(int definition, int* cellSize);
 
 	//Var
-	std::vector<Cell*> matrix; //Matriz 
+	std::vector<Cell*> matrix; //Ma triz 
 	std::vector<float> matrixAux;
 	Cell* highlightedCell;
 
