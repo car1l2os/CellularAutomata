@@ -13,8 +13,7 @@ private:
 
 	//Simulation flag
 	int simulation_flag = 0;
-	const int GAME_OF_LIVE = 0;
-	const int WIRE_WORLD = 1;
+
 
 
 
@@ -25,6 +24,7 @@ public:
 
 	//Var
 	std::vector<Cell*> matrix; //Matriz 
+	std::vector<float> matrixAux;
 	Cell* highlightedCell;
 
 	//Mouse
@@ -36,14 +36,19 @@ public:
 	void chargeState(std::string inString, int* cellSizeDirection);
 
 	//Statics
-	int const POS_VECTOR_DEFINITION = 0;
-	int const POS_VECTOR_CELLSIZE = 1;
-	int const POS_VECTOR_VALUES = 2;
+	const int  POS_VECTOR_DEFINITION = 0;
+	const int  POS_VECTOR_CELLSIZE = 1;
+	const int  POS_VECTOR_VALUES = 2;
+
+	const int GAME_OF_LIVE = 0;
+	const int WIRE_WORLD = 1;
 
 
 	//Simulations
 	std::vector<Cell*> GetNeighbours(Cell* cell, int cellIndex);
 	void GameOfLiveSimulation();
+	void WireWorldSimulation();
+	void Simulate();
 
 	//Geter & seter
 	int getSimulationFlag();

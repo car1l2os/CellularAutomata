@@ -12,10 +12,6 @@
 //Variables
 Grid* grid;
 
-
-
-
-
 //The timer starting time
 Uint32 start = 0;
 
@@ -177,15 +173,15 @@ void DrawCell_GameOfLive(Cell* cell, bool highlighted)
 		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 		SDL_RenderDrawRect(gRenderer, &outlineRect);*/
 	}
-	else	if (cell->getValue() == 1.0f) 
-			{
-				SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
-			}
+	else	if (cell->getValue() == 1.0f)
+	{
+		SDL_SetRenderDrawColor(gRenderer, 0xFF, 0x00, 0x00, 0xFF);
+	}
 
-			else 
-			{
-				SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
-			}
+	else
+	{
+		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
+	}
 
 	SDL_RenderFillRect(gRenderer, &fillRect);
 
@@ -196,13 +192,13 @@ void DrawCell_WireWorld(Cell* cell, bool highlighted)
 {
 	//Render filled quad
 	SDL_Rect fillRect = { cell->getX(), cell->getY(), *(cell->getWidth()), *(cell->getHeight()) }; //foo->bar() is the same as (*foo).bar() --> Como getWidth devuelve un puntero hay que coger el valor con *. Parentesis no necesario, puesto para claridad 
-	
+
 	if (cell->getValue() == 0.0f)
 	{
 		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0x00, 0xFF);
 	}
 
-	else if(cell->getValue() == 0.25f)
+	else if (cell->getValue() == 0.25f)
 	{
 		SDL_SetRenderDrawColor(gRenderer, 0x00, 0x00, 0xFF, 0xFF);
 	}
@@ -214,11 +210,11 @@ void DrawCell_WireWorld(Cell* cell, bool highlighted)
 	{
 		SDL_SetRenderDrawColor(gRenderer, 0x66, 0x66, 0x00, 0xFF);
 	}
-	
+
 	SDL_RenderFillRect(gRenderer, &fillRect);
 
-	
-	
+
+
 	if (highlighted)
 	{
 		SDL_Rect outlineRect = { cell->getX(), cell->getY(), *(cell->getWidth()), *(cell->getHeight()) };
@@ -233,12 +229,25 @@ void DrawCell_WireWorld(Cell* cell, bool highlighted)
 
 void DrawGrid(Grid* grid)
 {
-	for (unsigned i = 0;i < grid->matrix.size();i++) //unsigned i porque size es unsigned y así evitamos un warning(C4018)
+	if (grid->getSimulationFlag() == grid->GAME_OF_LIVE)
 	{
-		if(grid->highlightedCell != grid->matrix.at(i))
-			DrawCell_GameOfLive(grid->matrix.at(i),false);
-		else
-			DrawCell_GameOfLive(grid->matrix.at(i), true);
+		for (unsigned i = 0;i < grid->matrix.size();i++) //unsigned i porque size es unsigned y así evitamos un warning(C4018)
+		{
+			if (grid->highlightedCell != grid->matrix.at(i))
+				DrawCell_GameOfLive(grid->matrix.at(i), false);
+			else
+				DrawCell_GameOfLive(grid->matrix.at(i), true);
+		}
+	}
+	else if (grid->getSimulationFlag() == grid->WIRE_WORLD)
+	{
+		for (unsigned i = 0; i < grid->matrix.size(); i++) //unsigned i porque size es unsigned y así evitamos un warning(C4018)
+		{
+			if (grid->highlightedCell != grid->matrix.at(i))
+				DrawCell_WireWorld(grid->matrix.at(i), false);
+			else
+				DrawCell_WireWorld(grid->matrix.at(i), true);
+		}
 	}
 }
 
@@ -340,7 +349,7 @@ int main(int argc, char* args[])
 								break;
 
 							case SDLK_RIGHT:
-								grid->GameOfLiveSimulation();
+								grid->Simulate();
 								simulate = false;
 								break;
 
@@ -377,7 +386,7 @@ int main(int argc, char* args[])
 
 					if (timeCounter >= 1.0f)
 					{
-						grid->GameOfLiveSimulation();
+						grid->Simulate();
 						timeCounter = 0.0f;
 						t = clock();
 					}
