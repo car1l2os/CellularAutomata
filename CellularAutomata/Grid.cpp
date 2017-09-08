@@ -30,26 +30,23 @@ Cell* Grid::identifyCellByPos(int x, int y)
 	return matrix[((y / *cellSize) * definition) + (x / *cellSize)];
 }
 
-std::vector<float> Grid::GetMatrixValues()
+void Grid::GetMatrixValues()
 {
-
-	std::vector<float> values;
+	matrixAux.clear();
 
 	for (int i = 0;i < matrix.size();i++)
 	{
-		values.push_back(matrix.at(i)->getValue());
+		matrixAux.push_back(matrix.at(i)->getValue());
 	}
-
-	return values;
 }
 
-void Grid::SetMatrixValues(std::vector<float> values)
+void Grid::SetMatrixValues()
 {
-	if (matrix.size() == values.size())
+	if (matrix.size() == matrixAux.size())
 	{
-		for (int i = 0;i < values.size();i++)
+		for (int i = 0;i < matrixAux.size();i++)
 		{
-			matrix.at(i)->setValue(values[i]);
+			matrix.at(i)->setValue(matrixAux[i]);
 		}
 	}
 }
@@ -74,7 +71,7 @@ void Grid::chargeState(std::string inString, int* cellSizeDirection)
 	int n_definition = -1;
 	int n_cellSize = -1;
 
-	std::vector<float> n_values;
+	//std::vector<float> n_values;
 	int valuesIndex = 0;
 	std::string readed("");
 
@@ -107,7 +104,7 @@ void Grid::chargeState(std::string inString, int* cellSizeDirection)
 						readed += inString[i];
 						i++;
 					}
-					n_values.push_back(std::stof(readed));
+					matrixAux.push_back(std::stof(readed));
 					valuesIndex++;
 					readed = "";
 					i++;
@@ -144,7 +141,9 @@ void Grid::chargeState(std::string inString, int* cellSizeDirection)
 
 	*cellSizeDirection = n_cellSize;
 	definition = n_definition;
-	SetMatrixValues(n_values);
+	SetMatrixValues();
+	matrixAux.clear();
+
 
 
 	//return new Grid(n_definition, cellSizeDirection, n_values);
@@ -249,7 +248,7 @@ std::vector<Cell*> Grid::GetNeighbours(Cell * cell, int cellIndex)
 
 void Grid::GameOfLiveSimulation()
 {
-	std::vector<float> matrixAux = GetMatrixValues();
+	GetMatrixValues(); //Guarda valores en aux
 
 	for (int i = 0; i < matrix.size(); i++)
 	{
@@ -281,9 +280,48 @@ void Grid::GameOfLiveSimulation()
 
 	}
 
-	SetMatrixValues(matrixAux);
+	SetMatrixValues();
+	matrixAux.clear();
 
 	//Hay que destruir matrixAux
+}
+
+void Grid::WireWorldSimulation()
+{
+	GetMatrixValues();
+
+	for (int i = 0; i < matrix.size(); i++)
+	{
+		if (matrix.at(i)->getValue() == 0.75)
+		{
+			std::vector<Cell*> aux = GetNeighbours(matrix.at(i), i);
+			int count = 0;
+
+			for (int j = 0; j < aux.size(); j++)
+			{
+				if (aux.at(j)->getValue() == 0.25f)
+					count++;
+			}
+
+			if (count == 1 || count == 2)
+				matrixAux[i] = 0.25f; //Helectron head
+		}
+		else if (matrix.at(i)->getValue() == 0.5 || matrix.at(i)->getValue() == 0.25) //Not != 0.0f to control extrange values
+		{
+			matrixAux[i] += 0.25f;
+		}
+	}
+
+	SetMatrixValues();
+	matrixAux.clear();
+}
+
+void Grid::Simulate()
+{
+	if (simulation_flag == GAME_OF_LIVE)
+		GameOfLiveSimulation();
+	else if (simulation_flag == WIRE_WORLD)
+		WireWorldSimulation();
 }
 
 int Grid::getSimulationFlag()
@@ -299,11 +337,11 @@ void Grid::clickOn(int x, int y)
 {
 	//Entonctrar casilla y cambiar valor
 
-	if(simulation_flag == GAME_OF_LIVE)
+	if (simulation_flag == GAME_OF_LIVE)
 		identifyCellByPos(x, y)->switchIt();
 
 	else if (simulation_flag == WIRE_WORLD)
-			identifyCellByPos(x, y)->nextValue();
+		identifyCellByPos(x, y)->nextValue();
 }
 
 void Grid::mouseOver(int x, int y)

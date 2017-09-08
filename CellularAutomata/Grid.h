@@ -8,8 +8,8 @@ private:
 	int definition;
 	int* cellSize;
 	Cell* identifyCellByPos(int x, int y);
-	std::vector<float> GetMatrixValues();
-	void SetMatrixValues(std::vector<float> values);
+	void GetMatrixValues();
+	void SetMatrixValues();
 
 	//Simulation flag
 	int simulation_flag = 0;
