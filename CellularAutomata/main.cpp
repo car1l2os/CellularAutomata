@@ -12,7 +12,7 @@
 //Variables
 Grid* grid;
 
-//The timer starting time
+//The timer starting  time
 Uint32 start = 0;
 
 //The timer start/stop flag
