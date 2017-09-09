@@ -246,6 +246,24 @@ std::vector<Cell*> Grid::GetNeighbours(Cell * cell, int cellIndex)
 	return neighbours;
 }
 
+void Grid::ClearMatrix()
+{
+	for (int i = 0; i < matrix.size(); i++)
+	{
+		matrix.at(i)->setValue(0.0f);
+	}
+}
+
+void Grid::ChangeSimulation()
+{
+	if (simulation_flag == GAME_OF_LIVE)
+		simulation_flag = WIRE_WORLD;
+	else if (simulation_flag == WIRE_WORLD)
+		simulation_flag = GAME_OF_LIVE;
+
+	ClearMatrix();
+}
+
 void Grid::GameOfLiveSimulation()
 {
 	GetMatrixValues(); //Guarda valores en aux

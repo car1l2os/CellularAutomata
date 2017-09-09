@@ -361,12 +361,20 @@ int main(int argc, char* args[])
 
 								break;
 
+							case SDLK_c: //Change simulation
+								grid->ChangeSimulation();
+								break;
+
 							case SDLK_s: //Save state
 								std::ofstream saveFile;
 								saveFile.open("saveFile.txt");
 								saveFile << grid->saveState();
 								saveFile.close();
 								break;
+
+
+
+
 							}
 						}
 					}

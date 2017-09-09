@@ -1,14 +1,4 @@
-﻿  Grid.cpp
-d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\grid.cpp(37): warning C4018: '<': no coinciden signed/unsigned
-d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\grid.cpp(47): warning C4018: '<': no coinciden signed/unsigned
-d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\grid.cpp(58): warning C4018: '<': no coinciden signed/unsigned
-d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\grid.cpp(253): warning C4018: '<': no coinciden signed/unsigned
-d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\grid.cpp(260): warning C4018: '<': no coinciden signed/unsigned
-d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\grid.cpp(271): warning C4018: '<': no coinciden signed/unsigned
-d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\grid.cpp(293): warning C4018: '<': no coinciden signed/unsigned
-d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\grid.cpp(300): warning C4018: '<': no coinciden signed/unsigned
-  Generando código...
-  Omitiendo... (no se detectaron cambios relevantes)
-  main.cpp
+﻿  main.cpp
+d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\main.cpp(343): warning C4101: 'n_grid': variable local sin referencia
   CellularAutomata.vcxproj -> D:\MisArchivos\Proyectos\Universidad\InteligenciaArtificial\CellularAutomata\Debug\CellularAutomata.exe
   CellularAutomata.vcxproj -> D:\MisArchivos\Proyectos\Universidad\InteligenciaArtificial\CellularAutomata\Debug\CellularAutomata.pdb (Partial PDB)

@@ -46,6 +46,8 @@ public:
 
 	//Simulations
 	std::vector<Cell*> GetNeighbours(Cell* cell, int cellIndex);
+	void ClearMatrix();
+	void ChangeSimulation();
 	void GameOfLiveSimulation();
 	void WireWorldSimulation();
 	void Simulate();
