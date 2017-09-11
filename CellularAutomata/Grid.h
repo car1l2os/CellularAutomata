@@ -19,7 +19,7 @@ private:
 
 
 public:
-	//Constructor
+	// Constructor
 	Grid(int definition, int* cellSize);
 
 	//Var
