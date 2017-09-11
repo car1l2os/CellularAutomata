@@ -50,7 +50,9 @@ public:
 	void ChangeSimulation();
 	void GameOfLiveSimulation();
 	void WireWorldSimulation();
+	void ReactionDifusionSimulation();
 	void Simulate();
+	void ChangeMatrixToPixel();
 
 	//Geter & seter
 	int getSimulationFlag();

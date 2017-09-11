@@ -334,12 +334,22 @@ void Grid::WireWorldSimulation()
 	matrixAux.clear();
 }
 
+void Grid::ReactionDifusionSimulation()
+{
+
+}
+
 void Grid::Simulate()
 {
 	if (simulation_flag == GAME_OF_LIVE)
 		GameOfLiveSimulation();
 	else if (simulation_flag == WIRE_WORLD)
 		WireWorldSimulation();
+}
+
+void Grid::ChangeMatrixToPixel()
+{
+	matrix.clear();
 }
 
 int Grid::getSimulationFlag()
