@@ -10,6 +10,12 @@ Cell::Cell(int x, int y, int* width, int* height, float value)
 	 this->value = value;
 }
 
+Cell::Cell(float valueA, float valueB)
+{
+	this->valueA = valueA;
+	this->valueB = valueB;
+}
+
 //Getters
 bool Cell::getStatus() {
 	return value;
@@ -26,6 +32,14 @@ int Cell::getY() {
 int* Cell::getHeight() {
 	return height;
 }
+int Cell::getA()
+{
+	return valueA;
+}
+int Cell::getB()
+{
+	return valueB;
+}
 int* Cell::getWidth() {
 	return width;
 }
@@ -33,6 +47,16 @@ int* Cell::getWidth() {
 //Setters	
 void Cell::setValue(float value) {
 	this->value = value;
+}
+
+void Cell::setA(float value)
+{
+	valueA = value;
+}
+
+void Cell::setB(float value)
+{
+	valueB = value;
 }
 
 

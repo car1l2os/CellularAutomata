@@ -11,20 +11,36 @@ private:
 	void GetMatrixValues();
 	void SetMatrixValues();
 
+	void GetAValues();
+	void GetBValues();
+	void SetAValues();
+	void SetBValues();
+
+	//Laplace
+	float LaplaceA();
+	float LaplaceB();
+
+
 	//Simulation flag
 	int simulation_flag = 0;
 
-
-
+	//Values
+	float dA = 1.0f;
+	float dB = 0.5f;
+	float FEED = 0.055;
+	float KILL = 0.062;
 
 
 public:
 	// Constructor
 	Grid(int definition, int* cellSize);
+	Grid::Grid(int* canvasSide); //Per pixel grid	
+
 
 	//Var
 	std::vector<Cell*> matrix; //Ma triz 
 	std::vector<float> matrixAux;
+	std::vector<float> matrixAuxB;
 	Cell* highlightedCell;
 
 	//Mouse
@@ -46,6 +62,7 @@ public:
 
 	//Simulations
 	std::vector<Cell*> GetNeighbours(Cell* cell, int cellIndex);
+	std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex);
 	void ClearMatrix();
 	void ChangeSimulation();
 	void GameOfLiveSimulation();

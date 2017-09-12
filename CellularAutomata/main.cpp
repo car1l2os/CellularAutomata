@@ -19,8 +19,8 @@ Uint32 start = 0;
 bool running = false;
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 800;
+const int SCREEN_WIDTH = 200;
+const int SCREEN_HEIGHT = 200;
 
 //Colores pantalla
 int onColor = 0x00;
