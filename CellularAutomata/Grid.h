@@ -11,18 +11,22 @@ private:
 	void GetMatrixValues();
 	void SetMatrixValues();
 
+	void Grid::SetMatrixAValues();
+	void Grid::SetMatrixBValues();
+
+
 	void GetAValues();
 	void GetBValues();
 	void SetAValues();
 	void SetBValues();
 
 	//Laplace
-	float LaplaceA();
-	float LaplaceB();
+	float LaplaceA(Cell* currentCell, int index);
+	float LaplaceB(Cell* currentCell, int index);
 
 
 	//Simulation flag
-	int simulation_flag = 0;
+	int simulation_flag = 2;
 
 	//Values
 	float dA = 1.0f;
@@ -34,7 +38,7 @@ private:
 public:
 	// Constructor
 	Grid(int definition, int* cellSize);
-	Grid::Grid(int* canvasSide); //Per pixel grid	
+	Grid::Grid(const int* canvasSide); //Per pixel grid	
 
 
 	//Var
@@ -58,6 +62,7 @@ public:
 
 	const int GAME_OF_LIVE = 0;
 	const int WIRE_WORLD = 1;
+	const int REACTION_DIFFUSION = 2;
 
 
 	//Simulations

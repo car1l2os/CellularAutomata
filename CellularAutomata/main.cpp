@@ -227,6 +227,14 @@ void DrawCell_WireWorld(Cell* cell, bool highlighted)
 
 }
 
+void DrawCell_Diffusion(Cell* cell, int x, int y)
+{
+	SDL_SetRenderDrawColor(gRenderer, cell->getA()*255, 0x00, cell->getB() * 255, 0xFF);
+
+
+	SDL_RenderDrawPoint(gRenderer,x,y);
+}
+
 void DrawGrid(Grid* grid)
 {
 	if (grid->getSimulationFlag() == grid->GAME_OF_LIVE)
@@ -247,6 +255,18 @@ void DrawGrid(Grid* grid)
 				DrawCell_WireWorld(grid->matrix.at(i), false);
 			else
 				DrawCell_WireWorld(grid->matrix.at(i), true);
+		}
+	}
+	else if (grid->getSimulationFlag() == grid->REACTION_DIFFUSION)
+	{
+		int i = 0;
+		for (unsigned x = 0; x < SCREEN_WIDTH; x++) //unsigned i porque size es unsigned y así evitamos un warning(C4018)
+		{
+			for (unsigned y = 0; y < SCREEN_WIDTH; y++)
+			{
+				DrawCell_Diffusion(grid->matrix.at(i),x,y);
+				i++;
+			}
 		}
 	}
 }
@@ -289,7 +309,8 @@ int main(int argc, char* args[])
 			SDL_Event e;
 
 			//Grid creation
-			Grid* grid = new Grid(definition, &cellSize);
+			//Grid* grid = new Grid(definition, &cellSize);
+			Grid* grid = new Grid(&SCREEN_WIDTH);
 
 			//Start the timer
 			clock_t t;
@@ -329,11 +350,14 @@ int main(int argc, char* args[])
 
 						else if (e.type == SDL_MOUSEMOTION)
 						{
-							int x, y;
-							SDL_GetMouseState(&x, &y);
+							if (grid->getSimulationFlag() == grid->GAME_OF_LIVE || grid->getSimulationFlag() == grid->WIRE_WORLD)
+							{
+								int x, y;
+								SDL_GetMouseState(&x, &y);
 
-							grid->mouseOver(x, y);
-							//Pasar estas coordenadas al grid para resaltar la casilla en la que estás puesto
+								grid->mouseOver(x, y);
+								//Pasar estas coordenadas al grid para resaltar la casilla en la que estás puesto
+							}
 						}
 
 
