@@ -28,9 +28,16 @@ Grid::Grid(int definition, int* cellSize)
 Grid::Grid(const int* canvasSide)
 {
 	matrix.clear(); //No se si tengo que hacer esto.
-	for (int i=0; i<*canvasSide * *canvasSide;i++)
+	definition = *canvasSide;
+	for (int y = 0; y < *canvasSide;y++) //filas
 	{
-		matrix.push_back(new Cell(0.0f,0.0f));
+		for (int x = 0; x<*canvasSide;x++) //columnas
+		{
+			if(x>95 && x<105 && y>95 && y<105 )
+				matrix.push_back(new Cell(0.0f, 1.0f,x,y));
+			else
+				matrix.push_back(new Cell(1.0f,0.0f,x,y));
+		}
 	}
 }
 
@@ -59,24 +66,34 @@ void Grid::SetMatrixValues()
 	}
 }
 
-void Grid::SetMatrixAValues()
+void Grid::SetMatrixAValues() //Si quito las comprobaciones dentro del for funciona mal pero al menos se mueve
 {
 	if (matrix.size() == matrixAux.size())
 	{
 		for (int i = 0; i < matrixAux.size(); i++)
 		{
+			if (matrixAux[i] > 1.0f)
+				matrix.at(i)->setA(1.0f);
+			else if(matrixAux[i] < 0.0f)
+				matrix.at(i)->setA(0.0f);
+			else
 			matrix.at(i)->setA(matrixAux[i]);
 		}
 	}
 }
 
-void Grid::SetMatrixBValues()
+void Grid::SetMatrixBValues() //Si quito las comprobaciones dentro del for funciona mal pero al menos se mueve
 {
 	if (matrix.size() == matrixAuxB.size())
 	{
 		for (int i = 0; i < matrixAuxB.size(); i++)
 		{
-			matrix.at(i)->setB(matrixAuxB[i]);
+			if (matrixAuxB[i] > 1.0f)
+				matrix.at(i)->setB(1.0f);
+			else if(matrixAux[i] < 0.0f)
+				matrix.at(i)->setB(0.0f);
+			else
+				matrix.at(i)->setB(matrixAuxB[i]);
 		}
 	}
 }
@@ -122,16 +139,16 @@ void Grid::SetBValues()
 
 float Grid::LaplaceA(Cell* currentCell, int index)
 {
-	float sumA = - (currentCell->getA());
+	float sumA = -(currentCell->getA());
 
 	std::vector<Cell*> neighbours = GetToroidalNeighbours(currentCell, index);
 
 	for (int i = 0; i < neighbours.size(); i++)
 	{
 		if (neighbours.at(i)->getX() == currentCell->getX() || neighbours.at(i)->getY() == currentCell->getY())
-			sumA += neighbours.at(i)->getA()*0.5;
+			sumA += neighbours.at(i)->getA()*0.5f;
 		else
-			sumA += neighbours.at(i)->getA()*0.2;
+			sumA += neighbours.at(i)->getA()*0.2f;
 	}
 
 	return sumA;
@@ -352,10 +369,11 @@ std::vector<Cell*> Grid::GetNeighbours(Cell * cell, int cellIndex)
 std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex) //No tengo muy claras comportamiento en las esquinas
 {
 	std::vector<Cell*> neighbours;
+	neighbours.clear();
 
-	if ((cell->getY() / *(cell->getHeight())) == 0) //Franja superior
+	if (cell->getY() == 0) //Franja superior
 	{
-		if ((cell->getX() / *(cell->getWidth())) == 0) //Esquina superior izquierda
+		if (cell->getX() == 0) //Esquina superior izquierda
 		{
 			neighbours.push_back(matrix.at(1));
 			neighbours.push_back(matrix.at(definition));
@@ -372,7 +390,7 @@ std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex) //No 
 			neighbours.push_back(matrix.at( definition-1));//Arriba derecha
 			neighbours.push_back(matrix.at((definition * 2) - 1));
 		}
-		else if ((cell->getX() / *(cell->getWidth())) == definition - 1) //Esquina superior derecha
+		else if (cell->getX() == definition - 1) //Esquina superior derecha
 		{
 			neighbours.push_back(matrix.at(definition - 2));
 			neighbours.push_back(matrix.at((definition * 2) - 1));
@@ -398,17 +416,17 @@ std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex) //No 
 
 
 			//Toroidal
-			neighbours.push_back(matrix.at((definition*definition - 1) + cellIndex - 1));
-			neighbours.push_back(matrix.at(	(definition*definition-1) + cellIndex));
-			neighbours.push_back(matrix.at((definition*definition - 1) + cellIndex + 1));
+			neighbours.push_back(matrix.at((definition*(definition - 1)) + cellIndex - 1));
+			neighbours.push_back(matrix.at(	(definition*(definition-1)) + cellIndex));
+			neighbours.push_back(matrix.at((definition*(definition - 1)) + cellIndex + 1));
 
 
 
 		}
 	}
-	else if ((cell->getX() / *(cell->getWidth())) == 0) //Franja izquierda
+	else if (cell->getX() == 0) //Franja izquierda
 	{
-		if ((cell->getY() / *(cell->getHeight())) == (definition - 1)) //Esquina inferior izquierda
+		if (cell->getY() == (definition - 1)) //Esquina inferior izquierda
 		{
 			neighbours.push_back(matrix.at((definition*(definition - 2))));
 			neighbours.push_back(matrix.at((definition*(definition - 2)) + 1));
@@ -439,9 +457,9 @@ std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex) //No 
 			neighbours.push_back(matrix.at(cellIndex + definition));
 		}
 	}
-	else if ((cell->getY() / *(cell->getHeight())) == (definition - 1)) //Franja inferior
+	else if (cell->getY() == (definition - 1)) //Franja inferior
 	{
-		if ((cell->getX() / *(cell->getWidth())) == (definition - 1)) //Esquina inferior derecha
+		if (cell->getX() == (definition - 1)) //Esquina inferior derecha
 		{
 			neighbours.push_back(matrix.at((definition*(definition - 1)) + (definition - 1) - 1)); //Anterior
 			neighbours.push_back(matrix.at((definition*(definition - 2)) + (definition - 1))); //Una fila por encima
@@ -474,7 +492,7 @@ std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex) //No 
 			neighbours.push_back(matrix.at(cellIndex - (definition*(definition - 1))+1));
 		}
 	}
-	else if ((cell->getX() / *(cell->getWidth())) == (definition - 1)) //Franja derecha
+	else if (cell->getX() == (definition - 1)) //Franja derecha
 	{
 		neighbours.push_back(matrix.at(cellIndex - definition - 1));
 		neighbours.push_back(matrix.at(cellIndex - definition));

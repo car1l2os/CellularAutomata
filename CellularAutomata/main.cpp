@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string>
 #include <time.h>
+#include <math.h>
 #include <cmath>
 #include "Grid.h"
 
@@ -229,7 +230,14 @@ void DrawCell_WireWorld(Cell* cell, bool highlighted)
 
 void DrawCell_Diffusion(Cell* cell, int x, int y)
 {
-	SDL_SetRenderDrawColor(gRenderer, cell->getA()*255, 0x00, cell->getB() * 255, 0xFF);
+	int value = floor(cell->getA() * 255);
+
+	if (value < 0)
+		value = 0;
+	if (value > 255)
+		value = 255;
+
+	SDL_SetRenderDrawColor(gRenderer, value, value, value, 0xFF);
 
 
 	SDL_RenderDrawPoint(gRenderer,x,y);

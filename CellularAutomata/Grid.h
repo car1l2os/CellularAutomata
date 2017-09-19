@@ -31,8 +31,8 @@ private:
 	//Values
 	float dA = 1.0f;
 	float dB = 0.5f;
-	float FEED = 0.055;
-	float KILL = 0.062;
+	float FEED = 0.055f;
+	float KILL = 0.062f;
 
 
 public:

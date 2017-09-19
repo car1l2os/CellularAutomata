@@ -10,10 +10,12 @@ Cell::Cell(int x, int y, int* width, int* height, float value)
 	 this->value = value;
 }
 
-Cell::Cell(float valueA, float valueB)
+Cell::Cell(float valueA, float valueB, int x, int y)
 {
 	this->valueA = valueA;
 	this->valueB = valueB;
+	this->x = x;
+	this->y = y;
 }
 
 //Getters
