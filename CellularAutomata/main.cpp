@@ -230,9 +230,9 @@ void DrawCell_WireWorld(Cell* cell, bool highlighted)
 
 void DrawCell_Diffusion(Cell* cell, int x, int y)
 {
-	int value = floor(cell->getA() * 255);
+	int value = (cell->valueA - cell->valueB) * 255;
 
-	if (value < 0)
+	if (value < 0 && value != -255)
 		value = 0;
 	if (value > 255)
 		value = 255;
@@ -267,13 +267,26 @@ void DrawGrid(Grid* grid)
 	}
 	else if (grid->getSimulationFlag() == grid->REACTION_DIFFUSION)
 	{
-		int i = 0;
+		/*int i = 0;
 		for (unsigned x = 0; x < SCREEN_WIDTH; x++) //unsigned i porque size es unsigned y así evitamos un warning(C4018)
 		{
 			for (unsigned y = 0; y < SCREEN_WIDTH; y++)
 			{
 				DrawCell_Diffusion(grid->matrix.at(i),x,y);
 				i++;
+			}
+		}*/
+
+		/*for (int i = 0;i < grid->matrix.size();i++)
+		{
+			DrawCell_Diffusion(grid->matrix.at(i), grid->matrix.at(i)->getX(), grid->matrix.at(i)->getY());
+		}*/
+
+		for (int x = 0;x < 200;x++)
+		{
+			for (int y = 0;y < 200;y++)
+			{
+				DrawCell_Diffusion(grid->matrix_2D[x][y], x, y);
 			}
 		}
 	}
@@ -318,7 +331,7 @@ int main(int argc, char* args[])
 
 			//Grid creation
 			//Grid* grid = new Grid(definition, &cellSize);
-			Grid* grid = new Grid(&SCREEN_WIDTH);
+			Grid* grid = new Grid(&SCREEN_WIDTH,true);
 
 			//Start the timer
 			clock_t t;

@@ -3,6 +3,11 @@
 #include "Cell.h"
 #include <string>
 
+
+#include <stdio.h>
+#include <iostream>
+
+
 class Grid {
 private:
 	int definition;
@@ -38,12 +43,18 @@ private:
 public:
 	// Constructor
 	Grid(int definition, int* cellSize);
-	Grid::Grid(const int* canvasSide); //Per pixel grid	
+	Grid::Grid(const int* canvasSide, bool d2); //Per pixel grid	
 
 
 	//Var
 	std::vector<Cell*> matrix; //Ma triz 
+	std::vector<Cell*> next;
+
+	std::vector<std::vector<Cell*> > matrix_2D;
+	std::vector<std::vector<Cell*> > matrix_2D_aux;
+
 	std::vector<float> matrixAux;
+	std::vector<float> matrixAuxA;
 	std::vector<float> matrixAuxB;
 	Cell* highlightedCell;
 
@@ -73,6 +84,13 @@ public:
 	void GameOfLiveSimulation();
 	void WireWorldSimulation();
 	void ReactionDifusionSimulation();
+
+	void Grid::ReactionDifusionSimulation_2D();
+	float Grid::LaplaceA( int x, int y);
+	float Grid::LaplaceB( int x, int y);
+	std::vector<Cell*> Grid::GetToroidalNeighbours(int x, int y);
+
+
 	void Simulate();
 	void ChangeMatrixToPixel();
 

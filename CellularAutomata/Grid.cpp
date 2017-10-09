@@ -2,7 +2,7 @@
 #include <iostream>
 #include <SDL.h>
 
-
+int refrescos = 0;
 
 /*Esta clase se va a encargar de comprobar
 vecinos y  otros metodos   dentro de la matriz
@@ -25,18 +25,63 @@ Grid::Grid(int definition, int* cellSize)
 		matrix.push_back(new Cell((i*(*cellSize)), *cellSize * j, cellSize, cellSize, 0.0f));
 	}
 }
-Grid::Grid(const int* canvasSide)
+Grid::Grid(const int* canvasSide, bool d2)
 {
-	matrix.clear(); //No se si tengo que hacer esto.
-	definition = *canvasSide;
-	for (int y = 0; y < *canvasSide;y++) //filas
+	if (d2)
 	{
-		for (int x = 0; x<*canvasSide;x++) //columnas
+		// Set up sizes. (HEIGHT x WIDTH)
+		matrix_2D.resize(*canvasSide);
+		matrix_2D_aux.resize(*canvasSide);
+		for (int i = 0; i < *canvasSide; ++i)
 		{
-			if(x>95 && x<105 && y>95 && y<105 )
-				matrix.push_back(new Cell(0.0f, 1.0f,x,y));
-			else
-				matrix.push_back(new Cell(1.0f,0.0f,x,y));
+			matrix_2D[i].resize(*canvasSide);
+			matrix_2D_aux[i].resize(*canvasSide);
+		}
+	
+		for (int x = 0;x < 200; x++)
+		{
+			for (int y = 0;y < 200;y++)
+			{
+				if (x > 50 && x < 110 && y>50 && y < 110)
+				{
+					matrix_2D[x][y] = new Cell(0.0f, 1.0f, x, y);
+					matrix_2D_aux[x][y] = new Cell(0.0f, 1.0f, x, y);
+				}
+				else
+				{
+					matrix_2D[x][y] = new Cell(1.0f, 0.0f, x, y);
+					matrix_2D_aux[x][y] = new Cell(1.0f, 0.0f, x, y);
+				}
+			}
+		}
+		definition = 200;
+	}
+
+	else
+	{
+		matrix.clear(); //No se si tengo que hacer esto.
+		definition = *canvasSide;
+		for (int y = 0; y < *canvasSide;y++) //filas
+		{
+			for (int x = 0; x<*canvasSide;x++) //columnas
+			{
+				if (x > 80 && x < 120 && y>90 && y < 115)
+				{
+					matrix.push_back(new Cell(1.0f, 1.0f,x,y));
+					matrixAuxA.push_back(1.0f);
+					matrixAuxB.push_back(1.0f);
+
+					//next.push_back(new Cell(0.0f,1.0f, x, y));
+				}
+				else
+				{
+					matrix.push_back(new Cell(1.0f,0.0f,x,y));
+					matrixAuxA.push_back(1.0f);
+					matrixAuxB.push_back(0.0f);
+
+					//next.push_back(new Cell(1.0f, 0.0f, x, y));
+				}
+			}
 		}
 	}
 }
@@ -68,61 +113,79 @@ void Grid::SetMatrixValues()
 
 void Grid::SetMatrixAValues() //Si quito las comprobaciones dentro del for funciona mal pero al menos se mueve
 {
-	if (matrix.size() == matrixAux.size())
+	//if (matrix.size() == matrixAuxA.size())
 	{
-		for (int i = 0; i < matrixAux.size(); i++)
+		for (int i = 0; i < matrixAuxA.size(); i++)
 		{
-			if (matrixAux[i] > 1.0f)
+			/*if (matrixAux[i] > 1.0f)
 				matrix.at(i)->setA(1.0f);
 			else if(matrixAux[i] < 0.0f)
 				matrix.at(i)->setA(0.0f);
-			else
-			matrix.at(i)->setA(matrixAux[i]);
+			else*/
+			matrix.at(i)->setA(matrixAuxA[i]);
 		}
 	}
 }
-
 void Grid::SetMatrixBValues() //Si quito las comprobaciones dentro del for funciona mal pero al menos se mueve
 {
-	if (matrix.size() == matrixAuxB.size())
+//	if (matrix.size() == matrixAuxB.size())
 	{
 		for (int i = 0; i < matrixAuxB.size(); i++)
 		{
-			if (matrixAuxB[i] > 1.0f)
+			/*if (matrixAuxB[i] > 1.0f)
 				matrix.at(i)->setB(1.0f);
 			else if(matrixAux[i] < 0.0f)
 				matrix.at(i)->setB(0.0f);
-			else
+			else*/
 				matrix.at(i)->setB(matrixAuxB[i]);
 		}
 	}
 }
-
 void Grid::GetAValues()
 {
-	matrixAux.clear();
+	//matrixAuxA.clear();
 
-	for (int i = 0;i < matrix.size();i++)
+	if (matrixAuxA.size() == 0)
 	{
-		matrixAux.push_back(matrix.at(i)->getA());
+		for (int i = 0;i < matrix.size();i++)
+		{
+			matrixAuxA.push_back(matrix.at(i)->getA());
+		}
+	}
+	else
+	{
+		for (int i = 0;i < matrix.size();i++)
+		{
+			matrixAuxA[i] = matrix.at(i)->getA();
+		}
 	}
 }
 void Grid::GetBValues() 
 {
-	matrixAuxB.clear();
+	//matrixAuxB.clear();
 
-	for (int i = 0;i < matrix.size();i++)
+	if (matrixAuxB.size() == 0)
 	{
-		matrixAuxB.push_back(matrix.at(i)->getB());
+		for (int i = 0;i < matrix.size();i++)
+		{
+			matrixAuxB.push_back(matrix.at(i)->getA());
+		}
+	}
+	else
+	{
+		for (int i = 0;i < matrix.size();i++)
+		{
+			matrixAuxB[i] = matrix.at(i)->getA();
+		}
 	}
 }
 void Grid::SetAValues()
 {
-	if (matrix.size() == matrixAux.size())
+	if (matrix.size() == matrixAuxA.size())
 	{
-		for (int i = 0;i < matrixAux.size();i++)
+		for (int i = 0;i < matrixAuxA.size();i++)
 		{
-			matrix.at(i)->setA(matrixAux[i]);
+			matrix.at(i)->setA(matrixAuxA[i]);
 		}
 	}
 }
@@ -139,36 +202,74 @@ void Grid::SetBValues()
 
 float Grid::LaplaceA(Cell* currentCell, int index)
 {
-	float sumA = -(currentCell->getA());
+	float sumA = 0;
+	sumA += (currentCell->getA()) * -1;
 
 	std::vector<Cell*> neighbours = GetToroidalNeighbours(currentCell, index);
 
 	for (int i = 0; i < neighbours.size(); i++)
 	{
 		if (neighbours.at(i)->getX() == currentCell->getX() || neighbours.at(i)->getY() == currentCell->getY())
-			sumA += neighbours.at(i)->getA()*0.5f;
-		else
 			sumA += neighbours.at(i)->getA()*0.2f;
+		else
+			sumA += neighbours.at(i)->getA()*0.05f;
 	}
 
 	return sumA;
 }
+float Grid::LaplaceA(int x,int y)
+{
+	float sumA = 0;
+	sumA += (matrix_2D[x][y]->valueA) * -1;
 
+	std::vector<Cell*> neighbours = GetToroidalNeighbours(x,y);
+
+	for (int i = 0; i < neighbours.size(); i++)
+	{
+		if (neighbours[i]->x == matrix_2D[x][y]->x || neighbours[i]->y == matrix_2D[x][y]->y)
+			sumA += neighbours[i]->valueA *0.2f;
+		else
+			sumA += neighbours[i]->valueA *0.05f;
+	}
+
+	//if (abs(sumA) < 0.0001) return 0;
+	return sumA;
+}
 float Grid::LaplaceB(Cell* currentCell, int index)
 {
-	float sumB = -(currentCell->getB());
+	float sumB = 0;
+	sumB += (currentCell->getB()) *-1;
 
 	std::vector<Cell*> neighbours = GetToroidalNeighbours(currentCell, index);
 
 	for (int i = 0; i < neighbours.size(); i++)
 	{
 		if (neighbours.at(i)->getX() == currentCell->getX() || neighbours.at(i)->getY() == currentCell->getY())
-			sumB += neighbours.at(i)->getB()*0.5;
+			sumB += neighbours.at(i)->getB()*0.2f;
 		else
-			sumB += neighbours.at(i)->getB()*0.2;
+			sumB += neighbours.at(i)->getB()*0.05f;
 	}
 
 	return sumB;
+}
+float Grid::LaplaceB(int x, int y){
+
+	float sumB = 0;
+	sumB += (matrix_2D[x][y]->valueB) * -1;
+
+	std::vector<Cell*> neighbours = GetToroidalNeighbours(x, y);
+
+	for (int i = 0; i < neighbours.size(); i++)
+	{
+		if (neighbours[i]->x == matrix_2D[x][y]->x || neighbours[i]->y == matrix_2D[x][y]->y)
+			sumB += neighbours[i]->valueB *0.2f;
+		else
+			sumB += neighbours[i]->valueB *0.05f;
+	}
+
+	//if (std::abs(sumB) < 0.0001) return 0;
+	return sumB;
+
 }
 
 std::string Grid::saveState()
@@ -184,7 +285,6 @@ std::string Grid::saveState()
 
 	return saveString;
 }
-
 void Grid::chargeState(std::string inString, int* cellSizeDirection)
 {
 
@@ -365,17 +465,16 @@ std::vector<Cell*> Grid::GetNeighbours(Cell * cell, int cellIndex)
 
 	return neighbours;
 }
-
-std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex) //No tengo muy claras comportamiento en las esquinas
+std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex)
 {
 	std::vector<Cell*> neighbours;
-	neighbours.clear();
+	//neighbours.clear();
 
 	if (cell->getY() == 0) //Franja superior
 	{
 		if (cell->getX() == 0) //Esquina superior izquierda
 		{
-			neighbours.push_back(matrix.at(1));
+			neighbours.push_back(matrix.at(cellIndex+1));
 			neighbours.push_back(matrix.at(definition));
 			neighbours.push_back(matrix.at(definition + 1));
 
@@ -392,7 +491,7 @@ std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex) //No 
 		}
 		else if (cell->getX() == definition - 1) //Esquina superior derecha
 		{
-			neighbours.push_back(matrix.at(definition - 2));
+			neighbours.push_back(matrix.at(cellIndex-1));
 			neighbours.push_back(matrix.at((definition * 2) - 1));
 			neighbours.push_back(matrix.at((definition * 2) - 2));
 
@@ -454,7 +553,7 @@ std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex) //No 
 			//Toroidal
 			neighbours.push_back(matrix.at(cellIndex - 1));
 			neighbours.push_back(matrix.at(cellIndex + definition - 1));
-			neighbours.push_back(matrix.at(cellIndex + definition));
+			neighbours.push_back(matrix.at(cellIndex + (2 *definition)-1));
 		}
 	}
 	else if (cell->getY() == (definition - 1)) //Franja inferior
@@ -504,7 +603,7 @@ std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex) //No 
 
 
 		//Toroidal
-		neighbours.push_back(matrix.at(cellIndex - definition));
+		neighbours.push_back(matrix.at(cellIndex - (definition*2) + 1));
 		neighbours.push_back(matrix.at(cellIndex - (definition-1)));
 		neighbours.push_back(matrix.at(cellIndex+1));
 
@@ -523,6 +622,163 @@ std::vector<Cell*> Grid::GetToroidalNeighbours(Cell * cell, int cellIndex) //No 
 		neighbours.push_back(matrix.at(cellIndex + definition + 1));
 	}
 
+	//Debug por consola 
+	/*printf(std::to_string(cellIndex).c_str());
+	printf("\n");
+	for (int i = 0;i < 8;i++)
+	{
+		printf(std::to_string(neighbours.at(i)->getX()).c_str());
+		printf("   ");
+		printf(std::to_string(neighbours.at(i)->getY()).c_str());
+		printf("\n");
+	}*/
+
+	return neighbours;
+}
+std::vector<Cell*> Grid::GetToroidalNeighbours(int x, int y)
+{
+	std::vector<Cell*> neighbours;
+	//neighbours.clear();
+
+	if (y == 0) //Franja superior
+	{
+		if (x == 0) //Esquina superior izquierda
+		{
+			neighbours.push_back(matrix_2D[199][199]);
+			neighbours.push_back(matrix_2D[0][199]);
+			neighbours.push_back(matrix_2D[1][199]);
+
+			neighbours.push_back(matrix_2D[199][0]);
+			neighbours.push_back(matrix_2D[1][0]);
+
+			neighbours.push_back(matrix_2D[199][1]);
+			neighbours.push_back(matrix_2D[0][1]);
+			neighbours.push_back(matrix_2D[1][1]);
+		}
+		else if (x == definition - 1) //Esquina superior derecha
+		{
+			neighbours.push_back(matrix_2D[198][199]);
+			neighbours.push_back(matrix_2D[199][199]);
+			neighbours.push_back(matrix_2D[0][199]);
+
+			neighbours.push_back(matrix_2D[198][0]);
+			neighbours.push_back(matrix_2D[0][0]);
+
+			neighbours.push_back(matrix_2D[198][1]);
+			neighbours.push_back(matrix_2D[199][1]);
+			neighbours.push_back(matrix_2D[0][1]);
+		}
+		else
+		{
+			neighbours.push_back(matrix_2D[x-1][199]);
+			neighbours.push_back(matrix_2D[x][199]);
+			neighbours.push_back(matrix_2D[x+1][199]);
+
+			neighbours.push_back(matrix_2D[x-1][y]);
+			neighbours.push_back(matrix_2D[x+1][y]);
+
+			neighbours.push_back(matrix_2D[x-1][1]);
+			neighbours.push_back(matrix_2D[x][1]);
+			neighbours.push_back(matrix_2D[x+1][1]);
+		}
+	}
+	else if (x == 0) //Franja izquierda
+	{
+		if (y == (definition - 1)) //Esquina inferior izquierda
+		{
+			neighbours.push_back(matrix_2D[199][198]);
+			neighbours.push_back(matrix_2D[x][198]);
+			neighbours.push_back(matrix_2D[x + 1][198]);
+
+			neighbours.push_back(matrix_2D[199][199]);
+			neighbours.push_back(matrix_2D[x + 1][199]);
+
+			neighbours.push_back(matrix_2D[199][0]);
+			neighbours.push_back(matrix_2D[x][0]);
+			neighbours.push_back(matrix_2D[x + 1][0]);
+		}
+		else
+		{
+			neighbours.push_back(matrix_2D[199][y-1]);
+			neighbours.push_back(matrix_2D[x][y - 1]);
+			neighbours.push_back(matrix_2D[x + 1][y - 1]);
+
+			neighbours.push_back(matrix_2D[199][y]);
+			neighbours.push_back(matrix_2D[x + 1][y]);
+
+			neighbours.push_back(matrix_2D[199][y+1]);
+			neighbours.push_back(matrix_2D[x][y + 1]);
+			neighbours.push_back(matrix_2D[x + 1][y + 1]);
+		}
+	}
+	else if (y == (definition - 1)) //Franja inferior
+	{
+		if (x == (definition - 1)) //Esquina inferior derecha
+		{
+			neighbours.push_back(matrix_2D[x-1][y-1]);
+			neighbours.push_back(matrix_2D[x][y - 1]);
+			neighbours.push_back(matrix_2D[0][y - 1]);
+
+			neighbours.push_back(matrix_2D[x-1][y]);
+			neighbours.push_back(matrix_2D[0][y]);
+
+			neighbours.push_back(matrix_2D[x-1][0]);
+			neighbours.push_back(matrix_2D[x][0]);
+			neighbours.push_back(matrix_2D[0][0]);
+		}
+		else
+		{
+			neighbours.push_back(matrix_2D[x - 1][y - 1]);
+			neighbours.push_back(matrix_2D[x][y - 1]);
+			neighbours.push_back(matrix_2D[x+1][y - 1]);
+
+			neighbours.push_back(matrix_2D[x - 1][y]);
+			neighbours.push_back(matrix_2D[x+1][y]);
+
+			neighbours.push_back(matrix_2D[x - 1][0]);
+			neighbours.push_back(matrix_2D[x][0]);
+			neighbours.push_back(matrix_2D[x+1][0]);
+		}
+	}
+	else if (x == (definition - 1)) //Franja derecha
+	{
+		neighbours.push_back(matrix_2D[x - 1][y - 1]);
+		neighbours.push_back(matrix_2D[x][y - 1]);
+		neighbours.push_back(matrix_2D[0][y - 1]);
+
+		neighbours.push_back(matrix_2D[x - 1][y]);
+		neighbours.push_back(matrix_2D[0][y]);
+
+		neighbours.push_back(matrix_2D[x - 1][y+1]);
+		neighbours.push_back(matrix_2D[x][y+1]);
+		neighbours.push_back(matrix_2D[0][y+1]);
+
+	}
+	else //Caso general
+	{
+		neighbours.push_back(matrix_2D[x - 1][y - 1]);
+		neighbours.push_back(matrix_2D[x][y - 1]);
+		neighbours.push_back(matrix_2D[x + 1][y - 1]);
+
+		neighbours.push_back(matrix_2D[x - 1][y]);
+		neighbours.push_back(matrix_2D[x+1][y]);
+
+		neighbours.push_back(matrix_2D[x - 1][y + 1]);
+		neighbours.push_back(matrix_2D[x][y + 1]);
+		neighbours.push_back(matrix_2D[x+1][y + 1]);
+	}
+
+	//Debug por consola 
+	/*printf(std::to_string(cellIndex).c_str());
+	printf("\n");
+	for (int i = 0;i < 8;i++)
+	{
+	printf(std::to_string(neighbours.at(i)->getX()).c_str());
+	printf("   ");
+	printf(std::to_string(neighbours.at(i)->getY()).c_str());
+	printf("\n");
+	}*/
+
 	return neighbours;
 }
 
@@ -533,7 +789,6 @@ void Grid::ClearMatrix()
 		matrix.at(i)->setValue(0.0f);
 	}
 }
-
 void Grid::ChangeSimulation()
 {
 	if (simulation_flag == GAME_OF_LIVE)
@@ -583,7 +838,6 @@ void Grid::GameOfLiveSimulation()
 
 	//Hay que destruir matrixAux
 }
-
 void Grid::WireWorldSimulation()
 {
 	GetMatrixValues();
@@ -613,28 +867,103 @@ void Grid::WireWorldSimulation()
 	SetMatrixValues();
 	matrixAux.clear();
 }
+void Grid::ReactionDifusionSimulation_2D()
+{
+	float n_A, n_B;
+	std::cout << refrescos << "\n";
+	refrescos++;
 
+	for (int x = 0;x < 200; x++)
+	{
+		for (int y = 0;y < 200;y++)
+		{
+			float a = matrix_2D[x][y]->valueA;
+			float b = matrix_2D[x][y]->valueB;
+
+			float laplaceA = LaplaceA( x,y);
+			float laplaceB = LaplaceB( x,y);
+
+			float n_A = a + (dA * laplaceA - a*b*b + FEED * (1 - a));
+			float n_B = b + (dB * laplaceB + a*b*b - (KILL + FEED) * b);
+
+			
+
+			if (n_A > 1.0f || n_B > 1.0f || n_A < 0.0f || n_B < 0.0f)
+			{
+				float k = LaplaceB(x, y);
+				float l = LaplaceA(x, y);
+				std::cout << n_B << "\n";
+			}
+
+			matrix_2D_aux[x][y]->valueA = n_A;
+			matrix_2D_aux[x][y]->valueB = n_B;
+
+			if (matrix_2D_aux[x][y]->getX() > 100 && matrix_2D_aux[x][y]->getX() < 105 && matrix_2D_aux[x][y]->getY() > 100 && matrix_2D_aux[x][y]->getY() < 105)
+				int c = 2;
+		}
+	}
+
+	std::vector<std::vector<Cell*> > temp;
+
+	for (int x = 0;x < 200; x++)
+	{
+		for (int y = 0;y < 200;y++)
+		{
+			if (matrix_2D[x][y]->valueA > 1 || matrix_2D[x][y]->valueA < 0 || matrix_2D[x][y]->valueB > 1 || matrix_2D[x][y]->valueB < 0)
+			{
+				int a = 2;
+			}
+
+			matrix_2D[x][y]->valueA = matrix_2D_aux[x][y]->valueA;
+			matrix_2D[x][y]->valueB = matrix_2D_aux[x][y]->valueB;
+		}
+	}
+
+
+}
 void Grid::ReactionDifusionSimulation()
 {
-	GetAValues();
-	GetBValues();
+	//GetAValues();
+	//GetBValues();
 
 	for (int i = 0; i < matrix.size(); i++)
 	{
-		float a = matrix.at(i)->getA();
-		float b = matrix.at(i)->getB();
+		float a = matrix.at(i)->valueA;
+		float b = matrix.at(i)->valueB;
 
-		matrixAux[i] = a + (dA * LaplaceA(matrix.at(i),i)) - (a*b*b) + (FEED * (1 - a));
-		matrixAuxB[i] = b + (dB * LaplaceB(matrix.at(i),i)) + (a*b*b) - ((KILL + FEED) * b);
+		float laplaceA = LaplaceA(matrix.at(i), i);
+		float laplaceB = LaplaceB(matrix.at(i), i);
+
+		float n_A = a + (dA * laplaceA - (a*b*b) + FEED * (1 - a));
+		float n_B = b + (dB * laplaceB + (a*b*b) - (KILL + FEED) * b);
+
+		if (n_A > 1.0f || n_B > 1.0f || n_A < 0.0f || n_B < 0.0f)
+		{
+			float casda = 2.3f; //B se está pasando de 1
+		}
+
+		matrixAuxA[i] = n_A;
+		matrixAuxB[i] = n_B;
+
+		/*next[i]->setA(n_A);
+		next[i]->setB(n_B);*/
+
+		/*float n_A = next[i]->getA();
+		float n_B = next[i]->getB();*/
+
+		if (matrix.at(i)->getX()>100 && matrix.at(i)->getX()<105 && matrix.at(i)->getY()>100 && matrix.at(i)->getY()<105)
+			int c = 2;
 	}
 
 	SetMatrixAValues();
 	SetMatrixBValues();
-	matrixAux.clear();
-	matrixAuxB.clear();
+	//matrixAuxA.clear();
+	//matrixAuxB.clear();
 
+	/*std::vector<Cell*> temp = matrix;
+	matrix = next;
+	next = matrix;*/
 }
-
 void Grid::Simulate()
 {
 	if (simulation_flag == GAME_OF_LIVE)
@@ -642,14 +971,17 @@ void Grid::Simulate()
 	else if (simulation_flag == WIRE_WORLD)
 		WireWorldSimulation();
 	else if (simulation_flag == REACTION_DIFFUSION)
-		ReactionDifusionSimulation();
+	{
+		//ReactionDifusionSimulation();
+		ReactionDifusionSimulation_2D();
+	}
+
 }
 
 void Grid::ChangeMatrixToPixel()
 {
 	matrix.clear();
 }
-
 int Grid::getSimulationFlag()
 {
 	return simulation_flag;
@@ -658,7 +990,6 @@ void Grid::setSimulationFlag(int value)
 {
 	simulation_flag = value;
 }
-
 void Grid::clickOn(int x, int y)
 {
 	//Entonctrar casilla y cambiar valor
@@ -669,7 +1000,6 @@ void Grid::clickOn(int x, int y)
 	else if (simulation_flag == WIRE_WORLD)
 		identifyCellByPos(x, y)->nextValue();
 }
-
 void Grid::mouseOver(int x, int y)
 {
 	//Encontrar casilla y resaltar sobre la que estás 
