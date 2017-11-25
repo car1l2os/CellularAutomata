@@ -365,14 +365,16 @@ int main(int argc, char* args[])
 								grid->ChangeSimulation();
 								break;
 
+							case SDLK_ESCAPE:
+								quit = true;
+								break;
+
 							case SDLK_s: //Save state
 								std::ofstream saveFile;
 								saveFile.open("saveFile.txt");
 								saveFile << grid->saveState();
 								saveFile.close();
 								break;
-
-
 
 
 							}

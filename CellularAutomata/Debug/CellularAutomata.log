@@ -1,2 +1,4 @@
-﻿  CellularAutomata.vcxproj -> D:\MisArchivos\Proyectos\Universidad\InteligenciaArtificial\CellularAutomata\Debug\CellularAutomata.exe
+﻿  main.cpp
+d:\misarchivos\proyectos\universidad\inteligenciaartificial\cellularautomata\cellularautomata\main.cpp(343): warning C4101: 'n_grid': unreferenced local variable
+  CellularAutomata.vcxproj -> D:\MisArchivos\Proyectos\Universidad\InteligenciaArtificial\CellularAutomata\Debug\CellularAutomata.exe
   CellularAutomata.vcxproj -> D:\MisArchivos\Proyectos\Universidad\InteligenciaArtificial\CellularAutomata\Debug\CellularAutomata.pdb (Partial PDB)
